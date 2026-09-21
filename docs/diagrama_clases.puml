@@ -1,0 +1,193 @@
+@startuml DiagramaClasesMecaPro
+skinparam classAttributeIconSize 0
+skinparam monochrome false
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 8
+skinparam class {
+    BackgroundColor White
+    ArrowColor #334155
+    BorderColor #1E293B
+}
+
+package "mecapro.modelo" {
+    class Usuario {
+        - idUsuario : int
+        - username : String
+        - passwordHash : String
+        - rol : String
+        - dni : String
+        - nombres : String
+        - activo : boolean
+        + autenticar(pass : String) : boolean
+        + getRol() : String
+        + isActivo() : boolean
+    }
+
+    class Cliente {
+        - idCliente : int
+        - tipoDoc : String
+        - numDoc : String
+        - nombreRazon : String
+        - telefono : String
+        - correo : String
+        - direccion : String
+        + getNumDoc() : String
+        + getNombreRazon() : String
+    }
+
+    class Vehiculo {
+        - idVehiculo : int
+        - placa : String
+        - marca : String
+        - modelo : String
+        - anio : int
+        - vinChasis : String
+        - kilometraje : int
+        + getPlaca() : String
+        + actualizarKilometraje(km : int) : void
+    }
+
+    class OrdenTrabajo {
+        - idOrden : int
+        - codigoOT : String
+        - estado : String
+        - fallaDeclarada : String
+        - diagnosticoTecnico : String
+        - totalEstimado : double
+        - fechaIngreso : LocalDateTime
+        - fechaSalida : LocalDateTime
+        + agregarDetalle(d : DetalleOrden) : void
+        + calcularTotal() : double
+        + cambiarEstado(nuevoEstado : String) : void
+    }
+
+    class DetalleOrden {
+        - idDetalle : int
+        - tipoItem : String
+        - cantidad : double
+        - precioUnitario : double
+        - subtotal : double
+        + calcularSubtotal() : double
+    }
+
+    class Repuesto {
+        - idRepuesto : int
+        - codigoSKU : String
+        - descripcion : String
+        - precioVenta : double
+        - stockActual : int
+        - stockMinimo : int
+        + tieneStockSuficiente(cant : int) : boolean
+        + descontarStock(cant : int) : void
+    }
+
+    class ServicioTaller {
+        - idServicio : int
+        - codigoServicio : String
+        - nombreServicio : String
+        - precioEstandar : double
+        - tiempoEstimadoMin : int
+        + getPrecio() : double
+    }
+
+    class FacturaBoleta {
+        - idFactura : int
+        - tipoComprobante : String
+        - serieCorrelativo : String
+        - subtotal : double
+        - igv18 : double
+        - totalNeto : double
+        - metodoPago : String
+        + calcularIGV() : void
+        + emitirComprobante() : void
+    }
+}
+
+package "mecapro.dao" {
+    class UsuarioDAO {
+        - conexion : Connection
+        + login(u : String, p : String) : Usuario
+        + listarTodos() : List<Usuario>
+        + registrar(u : Usuario) : boolean
+    }
+
+    class ClienteDAO {
+        - conexion : Connection
+        + insertar(c : Cliente) : boolean
+        + buscarPorDoc(doc : String) : Cliente
+        + listar() : List<Cliente>
+    }
+
+    class OrdenTrabajoDAO {
+        - conexion : Connection
+        + crearOT(ot : OrdenTrabajo) : int
+        + actualizarEstado(id : int, e : String) : boolean
+        + obtenerPorId(id : int) : OrdenTrabajo
+        + listarPorFiltro(f : String) : List<OrdenTrabajo>
+    }
+
+    class RepuestoDAO {
+        - conexion : Connection
+        + listarInventario() : List<Repuesto>
+        + actualizarStock(id : int, cant : int) : boolean
+        + obtenerAlertasStock() : List<Repuesto>
+    }
+}
+
+package "mecapro.servicio" {
+    class AuthService {
+        - usuarioDAO : UsuarioDAO
+        - sesionActiva : Usuario
+        + validarCredenciales(u : String, p : String) : boolean
+        + cerrarSesion() : void
+        + verificarPermiso(rolRequerido : String) : boolean
+    }
+
+    class GeneradorReportesPDF {
+        + generarOrdenPDF(idOT : int) : File
+        + generarBoletaPDF(idFactura : int) : File
+        + exportarCierreCaja(idCaja : int) : File
+    }
+}
+
+package "mecapro.vista" {
+    class FrmLogin {
+        - txtUsuario : JTextField
+        - txtPass : JPasswordField
+        - btnIngresar : JButton
+        + btnIngresarActionPerformed() : void
+    }
+
+    class FrmPrincipalDashboard {
+        - pnlClientes : JPanel
+        - pnlOrdenes : JPanel
+        - pnlInventario : JPanel
+        - pnlCaja : JPanel
+        + cargarKPIsTaller() : void
+        + cambiarModulo(m : String) : void
+    }
+}
+
+' Relaciones de Modelos
+Cliente "1" *-- "0..*" Vehiculo : posee
+Vehiculo "1" *-- "0..*" OrdenTrabajo : atiende
+Usuario "1" --> "0..*" OrdenTrabajo : registra/atiende
+OrdenTrabajo "1" *-- "1..*" DetalleOrden : compone
+DetalleOrden "0..*" o-- "0..1" Repuesto : usa
+DetalleOrden "0..*" o-- "0..1" ServicioTaller : aplica
+OrdenTrabajo "1" -- "0..1" FacturaBoleta : liquida
+
+' Relaciones DAO y Capas
+UsuarioDAO ..> Usuario : maneja
+ClienteDAO ..> Cliente : maneja
+OrdenTrabajoDAO ..> OrdenTrabajo : maneja
+RepuestoDAO ..> Repuesto : maneja
+
+AuthService --> UsuarioDAO : consulta
+FrmLogin --> AuthService : invoca
+FrmPrincipalDashboard --> OrdenTrabajoDAO : consulta
+FrmPrincipalDashboard --> GeneradorReportesPDF : ejecuta
+
+@enduml

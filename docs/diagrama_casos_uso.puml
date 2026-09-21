@@ -1,0 +1,54 @@
+@startuml DiagramaCasosUsoMecaPro
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam roundCorner 8
+
+actor "Administrador" as Admin
+actor "Recepcionista" as Recep
+actor "Jefe de Taller / Mecánico" as Mecanico
+actor "Cajero" as Cajero
+
+rectangle "Sistema Integral MecaPro (SIGEMA)" {
+    usecase "CU01: Iniciar Sesión y Validar Roles (RBAC)" as CU01
+    usecase "CU02: Gestionar Usuarios y Permisos" as CU02
+    usecase "CU03: Registrar Cliente y Vehículo" as CU03
+    usecase "CU04: Aperturar Orden de Trabajo (OT)" as CU04
+    usecase "CU05: Registrar Diagnóstico Técnico y Fallas" as CU05
+    usecase "CU06: Asignar Repuestos y Servicios a OT" as CU06
+    usecase "CU07: Consultar Inventario y Stock Mínimo" as CU07
+    usecase "CU08: Emitir Factura / Boleta (IGV 18%)" as CU08
+    usecase "CU09: Apertura y Cierre Diario de Caja" as CU09
+    usecase "CU10: Generar Reportes PDF Oficiales" as CU10
+    
+    usecase "Validar Stock Disponible" as CU_SubStock
+}
+
+' Relaciones de Inclusión
+CU06 ..> CU_SubStock : <<include>>
+CU08 ..> CU10 : <<include>>
+
+' Asociaciones de Actores
+Admin --> CU01
+Admin --> CU02
+Admin --> CU07
+Admin --> CU10
+
+Recep --> CU01
+Recep --> CU03
+Recep --> CU04
+Recep --> CU10
+
+Mecanico --> CU01
+Mecanico --> CU05
+Mecanico --> CU06
+Mecanico --> CU07
+
+Cajero --> CU01
+Cajero --> CU08
+Cajero --> CU09
+Cajero --> CU10
+
+@enduml

@@ -1,0 +1,1107 @@
+/* Estilos generales del sistema MecaPro */
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap');
+
+/* Variables del tema claro */
+:root, html.light {
+  --bg-canvas: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-subtle: #f1f5f9;
+  --surface-hover: #f8fafc;
+  
+  --border-light: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --border-focus: #2563eb;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+
+  --accent-primary: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-subtle: #eff6ff;
+  --accent-border: #bfdbfe;
+
+  --badge-plate-bg: #f1f5f9;
+  --badge-plate-text: #0f172a;
+  --badge-plate-border: #cbd5e1;
+
+  --status-emerald: #059669;
+  --status-emerald-bg: #ecfdf5;
+  --status-emerald-border: #a7f3d0;
+
+  --status-amber: #d97706;
+  --status-amber-bg: #fffbeb;
+  --status-amber-border: #fde68a;
+
+  --status-crimson: #dc2626;
+  --status-crimson-bg: #fef2f2;
+  --status-crimson-border: #fecaca;
+
+  --status-slate: #475569;
+  --status-slate-bg: #f1f5f9;
+  --status-slate-border: #e2e8f0;
+
+  --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+  --shadow-hover: 0 10px 15px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-drawer: -10px 0 35px -5px rgba(15, 23, 42, 0.1), -4px 0 12px -4px rgba(15, 23, 42, 0.05);
+}
+
+/* Variables del tema oscuro */
+html.dark {
+  --bg-canvas: #090d16;
+  --surface-card: #101726;
+  --surface-elevated: #162032;
+  --surface-subtle: #192336;
+  --surface-hover: #1e2b42;
+  
+  --border-light: #233047;
+  --border-hover: #374763;
+  --border-focus: #3b82f6;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-inverse: #090d16;
+
+  --input-bg: #141d2e;
+  --input-border: #2a3b56;
+
+  --accent-primary: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-subtle: rgba(59, 130, 246, 0.14);
+  --accent-border: #1e40af;
+
+  --badge-plate-bg: #162032;
+  --badge-plate-text: #ffffff;
+  --badge-plate-border: #374763;
+
+  --status-emerald: #34d399;
+  --status-emerald-bg: rgba(5, 150, 105, 0.18);
+  --status-emerald-border: rgba(52, 211, 153, 0.35);
+
+  --status-amber: #fbbf24;
+  --status-amber-bg: rgba(217, 119, 6, 0.18);
+  --status-amber-border: rgba(251, 191, 36, 0.35);
+
+  --status-crimson: #f87171;
+  --status-crimson-bg: rgba(220, 38, 38, 0.18);
+  --status-crimson-border: rgba(248, 113, 113, 0.35);
+
+  --status-slate: #94a3b8;
+  --status-slate-bg: #162032;
+  --status-slate-border: #233047;
+
+  --shadow-card: 0 4px 12px -1px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 12px 24px -3px rgba(0, 0, 0, 0.5);
+  --shadow-drawer: -12px 0 40px -5px rgba(0, 0, 0, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Bordes generales de 2px */
+.rounded-3xl,
+.rounded-2xl,
+.rounded-xl,
+.rounded-lg,
+.rounded-md,
+.rounded {
+  border-radius: 2px !important;
+}
+
+.rounded-sm {
+  border-radius: 1px !important;
+}
+
+/* Contenedores y tarjetas */
+.scandi-card,
+.scandi-card-interactive,
+.bay-card-3d,
+.slide-drawer,
+.modal-fondo > div,
+.modal-container,
+.overflow-x-auto,
+.overflow-hidden {
+  border-radius: 2px !important;
+}
+
+/* Botones y campos de formulario */
+.btn-scandi,
+.btn-scandi-primary,
+.btn-scandi-secondary,
+.scandi-input,
+button,
+input,
+select,
+textarea {
+  border-radius: 2px !important;
+}
+
+/* Navegación lateral */
+.side-nav-item {
+  border-radius: 2px !important;
+}
+
+.side-nav-item span.rounded-full,
+.badge-chip {
+  border-radius: 2px !important;
+}
+
+/* Etiquetas de estado y placas */
+.badge-status,
+.plate-badge,
+.badge-emerald,
+.badge-amber,
+.badge-crimson,
+.badge-slate {
+  border-radius: 2px !important;
+}
+
+/* Puntos indicadores circulares */
+span.w-2.h-2.rounded-full,
+span.w-1\.5.h-1\.5.rounded-full,
+span.h-2.w-2.rounded-full,
+.beacon-pulse-emerald,
+.animate-ping {
+  border-radius: 9999px !important;
+}
+
+html, body {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: 'Manrope', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  transition: background-color 180ms ease, color 180ms ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilos de texto y encabezados */
+h1, h2, h3, h4, h5, h6, .font-heading, .heading-bold {
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Pesos de fuente */
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+/* Fuente en controles */
+button, input, select, textarea {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.btn-scandi {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Fuente monoespaciada para códigos y placas */
+.font-mono, code, kbd, .plate-badge {
+  font-family: 'Space Grotesk', 'JetBrains Mono', monospace !important;
+}
+
+/* Barra de desplazamiento */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Utilidades básicas */
+.no-wrap {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.pointer, 
+button, 
+[role="button"], 
+select, 
+.clickable {
+  cursor: pointer !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Tarjetas principales */
+.scandi-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-light);
+  border-radius: 2px !important;
+  box-shadow: var(--shadow-card);
+  color: var(--text-primary);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background-color 180ms ease;
+}
+
+.scandi-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+.scandi-card-interactive {
+  cursor: pointer;
+}
+
+.scandi-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-hover);
+}
+
+.scandi-card-interactive:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Botones del menú lateral */
+.side-nav-item {
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 12px !important;
+  border-radius: 2px !important;
+  border-left: 4px solid transparent !important;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.side-nav-item span {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.side-nav-item:hover {
+  background-color: var(--surface-subtle);
+  color: var(--text-primary);
+}
+
+/* Botón lateral activo */
+.nav-item-active {
+  background-color: var(--accent-subtle) !important;
+  color: var(--accent-primary) !important;
+  border-left: 4px solid var(--accent-primary) !important;
+  font-weight: 700 !important;
+}
+
+/* Panel lateral deslizable */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 13, 22, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 100000 !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 540px;
+  background: var(--surface-card);
+  border-left: 1px solid var(--border-light);
+  box-shadow: var(--shadow-drawer);
+  z-index: 51;
+  transform: translateX(100%);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-drawer.open {
+  transform: translateX(0);
+}
+
+/* Fondo de ventanas modales */
+.modal-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(9, 13, 22, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+@media (max-width: 640px) {
+  .modal-fondo {
+    padding: 12px;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+}
+
+.modal-fondo > div {
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  margin: auto;
+}
+
+.modal-fondo.hidden {
+  display: none !important;
+}
+
+.modal-fondo.open {
+  display: flex !important;
+}
+
+/* Estilos de documentos para vista previa e impresión */
+#printable-pdf-content,
+#modal-pdf-viewer #printable-pdf-content {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* Formato de placa en documentos */
+#printable-pdf-content .plate-badge,
+#modal-pdf-viewer .plate-badge {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1.5px solid #0f172a !important;
+  border-radius: 3px !important;
+  padding: 2px 8px !important;
+  font-family: 'Space Grotesk', 'JetBrains Mono', monospace !important;
+  font-weight: 800 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  display: inline-block !important;
+  box-shadow: none !important;
+}
+
+/* Etiquetas de estado en hoja blanca */
+#printable-pdf-content .badge-status,
+#modal-pdf-viewer .badge-status {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2px 8px !important;
+  font-weight: 700 !important;
+  font-size: 10px !important;
+  border-radius: 3px !important;
+  letter-spacing: 0.02em !important;
+}
+
+#printable-pdf-content .badge-emerald,
+#modal-pdf-viewer .badge-emerald {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+#printable-pdf-content .badge-amber,
+#modal-pdf-viewer .badge-amber {
+  background-color: #fef3c7 !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a !important;
+}
+
+#printable-pdf-content .badge-cobalt,
+#printable-pdf-content .badge-blue,
+#modal-pdf-viewer .badge-cobalt,
+#modal-pdf-viewer .badge-blue {
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe !important;
+}
+
+#printable-pdf-content .badge-rose,
+#printable-pdf-content .badge-crimson,
+#modal-pdf-viewer .badge-rose,
+#modal-pdf-viewer .badge-crimson {
+  background-color: #fff1f2 !important;
+  color: #be123c !important;
+  border: 1px solid #fecdd3 !important;
+}
+
+#printable-pdf-content .badge-purple,
+#modal-pdf-viewer .badge-purple {
+  background-color: #f5f3ff !important;
+  color: #6d28d9 !important;
+  border: 1px solid #ddd6fe !important;
+}
+
+#printable-pdf-content .badge-slate,
+#modal-pdf-viewer .badge-slate {
+  background-color: #f8fafc !important;
+  color: #334155 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Colores de texto en documentos */
+#printable-pdf-content .text-slate-900,
+#modal-pdf-viewer .text-slate-900 {
+  color: #0f172a !important;
+}
+
+#printable-pdf-content .text-slate-800,
+#modal-pdf-viewer .text-slate-800 {
+  color: #1e293b !important;
+}
+
+#printable-pdf-content .text-slate-700,
+#modal-pdf-viewer .text-slate-700 {
+  color: #334155 !important;
+}
+
+#printable-pdf-content .text-slate-600,
+#modal-pdf-viewer .text-slate-600 {
+  color: #475569 !important;
+}
+
+#printable-pdf-content .text-slate-500,
+#printable-pdf-content .text-slate-400,
+#modal-pdf-viewer .text-slate-500,
+#modal-pdf-viewer .text-slate-400 {
+  color: #475569 !important;
+}
+
+#printable-pdf-content .text-blue-600,
+#printable-pdf-content .text-blue-700,
+#printable-pdf-content .text-blue-800,
+#modal-pdf-viewer .text-blue-600,
+#modal-pdf-viewer .text-blue-700,
+#modal-pdf-viewer .text-blue-800 {
+  color: #1d4ed8 !important;
+}
+
+#printable-pdf-content .text-emerald-600,
+#printable-pdf-content .text-emerald-700,
+#modal-pdf-viewer .text-emerald-600,
+#modal-pdf-viewer .text-emerald-700 {
+  color: #047857 !important;
+}
+
+#printable-pdf-content .text-rose-600,
+#modal-pdf-viewer .text-rose-600 {
+  color: #be123c !important;
+}
+
+/* Tablas y fondos en documentos */
+#printable-pdf-content .bg-slate-50,
+#printable-pdf-content .bg-slate-100,
+#modal-pdf-viewer .bg-slate-50,
+#modal-pdf-viewer .bg-slate-100 {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+#printable-pdf-content table,
+#modal-pdf-viewer table {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+#printable-pdf-content th,
+#modal-pdf-viewer th {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-bottom: 2px solid #0f172a !important;
+  font-weight: 800 !important;
+}
+
+#printable-pdf-content td,
+#modal-pdf-viewer td {
+  border-color: #e2e8f0 !important;
+}
+
+#printable-pdf-content tr:hover,
+#modal-pdf-viewer tr:hover {
+  background-color: transparent !important;
+}
+
+/* Estilos de botones */
+.btn-scandi {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  border-radius: 2px !important;
+  padding: 8px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.btn-scandi:active, button:active:not([disabled]) {
+  transform: scale(0.97) !important;
+}
+
+/* Tarjetas de bahías de trabajo */
+.perspective-container {
+  perspective: 1200px;
+}
+
+.bay-card-3d {
+  transform-style: preserve-3d;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 220ms ease, border-color 180ms ease;
+  will-change: transform;
+}
+
+.bay-card-3d:hover {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.12), 0 8px 16px -4px rgba(15, 23, 42, 0.08);
+}
+
+html.dark .bay-card-3d:hover {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 20px 40px -6px rgba(0, 0, 0, 0.6), 0 0 24px -4px rgba(59, 130, 246, 0.25);
+}
+
+/* Resaltado de bahía ocupada */
+.bay-card-active {
+  position: relative;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 1px var(--accent-primary), 0 12px 28px -4px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Etiquetas de código técnico */
+.hud-telemetry-chip {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.btn-scandi-primary {
+  background: var(--accent-primary);
+  color: #ffffff;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgba(37, 99, 235, 0.25);
+}
+
+.btn-scandi-primary:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 4px 12px 0 rgba(37, 99, 235, 0.35);
+}
+
+.btn-scandi-secondary {
+  background: var(--surface-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+}
+
+.btn-scandi-secondary:hover {
+  background: var(--surface-subtle);
+  border-color: var(--border-hover);
+}
+
+/* Etiquetas de estado */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 2px !important;
+  font-size: 11px;
+  font-family: 'Outfit', 'Manrope', sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-emerald {
+  background: var(--status-emerald-bg);
+  color: var(--status-emerald);
+  border: 1px solid var(--status-emerald-border);
+}
+
+.badge-amber {
+  background: var(--status-amber-bg);
+  color: var(--status-amber);
+  border: 1px solid var(--status-amber-border);
+}
+
+.badge-crimson {
+  background: var(--status-crimson-bg);
+  color: var(--status-crimson);
+  border: 1px solid var(--status-crimson-border);
+}
+
+.badge-slate {
+  background: var(--status-slate-bg);
+  color: var(--status-slate);
+  border: 1px solid var(--status-slate-border);
+}
+
+/* Etiqueta de placa vehicular */
+.plate-badge {
+  background: var(--badge-plate-bg);
+  color: var(--badge-plate-text);
+  border: 1px solid var(--badge-plate-border);
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 2px !important;
+  letter-spacing: 0.06em;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Animación de indicador activo */
+.beacon-pulse-emerald {
+  animation: beaconPulse 2.2s infinite ease-in-out;
+}
+@keyframes beaconPulse {
+  0% { transform: scale(0.95); opacity: 0.9; }
+  50% { transform: scale(1.25); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.9; }
+}
+
+/* Campos de entrada */
+.scandi-input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--input-border);
+  border-radius: 2px !important;
+  padding: 9px 12px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  width: 100%;
+}
+
+.scandi-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-subtle);
+}
+
+/* Configuración para impresión de documentos y reportes */
+@media print {
+  /* Ocultar elementos de navegación y controles durante la impresión */
+  header,
+  aside,
+  #app-sidebar,
+  #sidebar-mobile-backdrop,
+  main,
+  #main-content,
+  .app-view,
+  #toast-container,
+  .modal-fondo:not(#modal-pdf-viewer),
+  .no-print,
+  .print\:hidden,
+  .btn-scandi,
+  button,
+  select {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    width: 0 !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    font-size: 11.5px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Contenedor del visor de documento */
+  #modal-pdf-viewer {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    display: block !important;
+    visibility: visible !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    z-index: 999999 !important;
+  }
+
+  #modal-pdf-viewer > div {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  /* Ocultar cabecera de botones del modal al imprimir */
+  #modal-pdf-viewer .print\:hidden,
+  #modal-pdf-viewer > div > div:first-child {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  /* Área de contenido del documento */
+  #printable-pdf-content {
+    display: block !important;
+    visibility: visible !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  #printable-pdf-content * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Formato de placa y etiquetas de estado en papel */
+  .plate-badge,
+  #printable-pdf-content .plate-badge,
+  #modal-pdf-viewer .plate-badge {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1.5px solid #0f172a !important;
+    border-radius: 3px !important;
+    padding: 2px 8px !important;
+    font-family: 'Space Grotesk', 'JetBrains Mono', monospace !important;
+    font-weight: 800 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    display: inline-block !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+  }
+
+  .badge-status,
+  #printable-pdf-content .badge-status,
+  #modal-pdf-viewer .badge-status {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 2px 8px !important;
+    font-weight: 700 !important;
+    font-size: 10px !important;
+    border-radius: 3px !important;
+    letter-spacing: 0.02em !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .badge-emerald,
+  #printable-pdf-content .badge-emerald,
+  #modal-pdf-viewer .badge-emerald {
+    background: #ecfdf5 !important;
+    background-color: #ecfdf5 !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .badge-amber,
+  #printable-pdf-content .badge-amber,
+  #modal-pdf-viewer .badge-amber {
+    background: #fef3c7 !important;
+    background-color: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .badge-cobalt, .badge-blue,
+  #printable-pdf-content .badge-cobalt,
+  #printable-pdf-content .badge-blue,
+  #modal-pdf-viewer .badge-cobalt,
+  #modal-pdf-viewer .badge-blue {
+    background: #eff6ff !important;
+    background-color: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #bfdbfe !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .badge-rose, .badge-crimson,
+  #printable-pdf-content .badge-rose,
+  #printable-pdf-content .badge-crimson,
+  #modal-pdf-viewer .badge-rose,
+  #modal-pdf-viewer .badge-crimson {
+    background: #fff1f2 !important;
+    background-color: #fff1f2 !important;
+    color: #be123c !important;
+    border: 1px solid #fecdd3 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .badge-purple,
+  #printable-pdf-content .badge-purple,
+  #modal-pdf-viewer .badge-purple {
+    background: #f5f3ff !important;
+    background-color: #f5f3ff !important;
+    color: #6d28d9 !important;
+    border: 1px solid #ddd6fe !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .badge-slate,
+  #printable-pdf-content .badge-slate,
+  #modal-pdf-viewer .badge-slate {
+    background: #f8fafc !important;
+    background-color: #f8fafc !important;
+    color: #334155 !important;
+    border: 1px solid #cbd5e1 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Colores de texto en papel */
+  #printable-pdf-content .text-slate-900 { color: #0f172a !important; }
+  #printable-pdf-content .text-slate-800 { color: #1e293b !important; }
+  #printable-pdf-content .text-slate-700 { color: #334155 !important; }
+  #printable-pdf-content .text-slate-600 { color: #475569 !important; }
+  #printable-pdf-content .text-slate-500,
+  #printable-pdf-content .text-slate-400 { color: #475569 !important; }
+
+  /* Evitar cortes de filas al cambiar de página */
+  table, tr, td, th, .grid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  @page {
+    size: portrait;
+    margin: 10mm 14mm;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mostrar y ocultar menú lateral */
+#app-sidebar {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+}
+
+#main-content {
+  transition: margin-left 0.22s cubic-bezier(0.16, 1, 0.3, 1), width 0.22s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  max-width: 100% !important;
+  flex: 1 1 0% !important;
+}
+
+.app-view {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+body.sidebar-hidden #app-sidebar {
+  transform: translateX(-100%) !important;
+  box-shadow: none !important;
+}
+
+@media (min-width: 1024px) {
+  #main-content {
+    width: calc(100% - 260px) !important;
+    max-width: calc(100% - 260px) !important;
+  }
+
+  body.sidebar-hidden #main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Botones de filtro rápido de fechas */
+.btn-rango-preset {
+  cursor: pointer !important;
+  user-select: none;
+  font-family: inherit;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-rango-preset:active {
+  transform: scale(0.97);
+}
+
+/* Accesibilidad: enfoque visible para navegacion con teclado */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+
+
+/* Estilos de badges y contraste */
+/* ---- */
+.badge-cobalt, .badge-blue {
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe !important;
+  font-weight: 700;
+}
+html.dark .badge-cobalt, html.dark .badge-blue {
+  background-color: rgba(30, 58, 138, 0.4) !important;
+  color: #93c5fd !important;
+  border: 1px solid #1e40af !important;
+}
+
+.badge-purple {
+  background-color: #f5f3ff !important;
+  color: #6d28d9 !important;
+  border: 1px solid #ddd6fe !important;
+  font-weight: 700;
+}
+html.dark .badge-purple {
+  background-color: rgba(91, 33, 182, 0.4) !important;
+  color: #c4b5fd !important;
+  border: 1px solid #6d28d9 !important;
+}
+
+.badge-rose, .badge-crimson {
+  background-color: #fff1f2 !important;
+  color: #be123c !important;
+  border: 1px solid #fecdd3 !important;
+  font-weight: 700;
+}
+html.dark .badge-rose, html.dark .badge-crimson {
+  background-color: rgba(159, 18, 57, 0.4) !important;
+  color: #fda4af !important;
+  border: 1px solid #9f1239 !important;
+}
+
+.badge-emerald, .badge-green {
+  background-color: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+  font-weight: 700;
+}
+html.dark .badge-emerald, html.dark .badge-green {
+  background-color: rgba(6, 78, 59, 0.4) !important;
+  color: #6ee7b7 !important;
+  border: 1px solid #065f46 !important;
+}
+
+.badge-amber, .badge-orange {
+  background-color: #fffbeb !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a !important;
+  font-weight: 700;
+}
+html.dark .badge-amber, html.dark .badge-orange {
+  background-color: rgba(120, 53, 15, 0.4) !important;
+  color: #fcd34d !important;
+  border: 1px solid #92400e !important;
+}
+
+/* Cursor pointer garantizado para elementos interactivos */
+button, select, input[type="checkbox"], input[type="radio"], [role="button"], .pointer {
+  cursor: pointer !important;
+}
+
+/* Foco accesible :focus-visible */
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 1px !important;
+}

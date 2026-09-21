@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "cuentas-951a9"
+  },
+  "targets": {
+    "cuentas-951a9": {
+      "hosting": {
+        "mecapro": [
+          "mecapro"
+        ]
+      }
+    }
+  }
+}

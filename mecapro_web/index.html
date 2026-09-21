@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MecaPro - Sistema de Gestión de Taller Automotriz</title>
+  <meta name="description" content="MecaPro - Sistema de Gestión de Taller Automotriz. Plataforma web integral para el control de órdenes de trabajo, inventario, clientes, vehículos y facturación.">
+  <link rel="icon" type="image/png" href="assets/logo_badge.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  
+  <!-- Fuentes de Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Iconos -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        borderRadius: {
+          'none': '0px',
+          'sm': '1px',
+          'DEFAULT': '2px',
+          'md': '2px',
+          'lg': '2px',
+          'xl': '2px',
+          '2xl': '2px',
+          '3xl': '2px',
+          'full': '9999px'
+        },
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+            heading: ['"Outfit"', 'sans-serif'],
+            mono: ['"Space Grotesk"', '"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-[#f8fafc] dark:bg-[#090d16] text-slate-900 dark:text-slate-100 antialiased min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white transition-colors duration-200">
+
+  <!-- Barra superior -->
+  <header class="fixed top-0 left-0 right-0 z-40 flex justify-between items-center w-full px-3 sm:px-6 lg:px-8 h-16 bg-white/95 dark:bg-[#101726]/95 backdrop-blur-md border-b border-slate-200 dark:border-[#233047] shadow-sm transition-colors duration-200">
+    <!-- Logo y buscador -->
+    <div class="flex items-center gap-2 sm:gap-4 lg:gap-6 min-w-0">
+      <!-- Botón para ocultar/mostrar menú lateral -->
+      <button type="button" id="btn-toggle-sidebar" onclick="toggleSidebar()" class="p-2 rounded-lg text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] cursor-pointer pointer transition-all flex items-center justify-center flex-shrink-0 shadow-xs" title="Ocultar / Mostrar barra lateral (Ctrl+B)" aria-label="Ocultar o mostrar barra lateral">
+        <i id="sidebar-toggle-icon" data-lucide="panel-left-close" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-600 p-1.5 flex items-center justify-center shadow-md shadow-blue-500/25 flex-shrink-0 overflow-hidden">
+          <img src="assets/logo_white.png" alt="MecaPro Logo" class="w-full h-full object-contain">
+        </div>
+        <div class="flex flex-col">
+          <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white leading-tight">
+            MecaPro
+          </span>
+          <span class="hidden sm:inline text-[11px] text-slate-500 dark:text-slate-400 font-medium">Sistema Integrado de Taller</span>
+        </div>
+      </div>
+
+      <!-- Barra de búsqueda rápida -->
+      <div onclick="toggleBuscadorRapido()" class="hidden md:flex items-center relative w-64 lg:w-80 bg-slate-50 dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] hover:border-blue-500 dark:hover:border-blue-400 rounded-lg px-3 py-1.5 pointer transition-colors group">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 mr-2.5"></i>
+        <span class="text-xs text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-200 select-none">Buscar placa, cliente, OT...</span>
+        <kbd class="ml-auto px-1.5 py-0.5 rounded bg-white dark:bg-[#101726] border border-slate-200 dark:border-[#2a3b56] text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold shadow-xs">Ctrl+K</kbd>
+      </div>
+    </div>
+
+    <!-- Controles y perfil -->
+    <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+      <!-- Botón de búsqueda en móvil -->
+      <button type="button" onclick="toggleBuscadorRapido()" class="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] pointer transition-colors" title="Buscar (Ctrl+K)" aria-label="Buscar en el sistema">
+        <i data-lucide="search" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Botón nueva orden -->
+      <button type="button" id="btn-top-new-order" onclick="openNewOrderModal()" class="btn-scandi btn-scandi-primary text-xs no-wrap shadow-sm flex items-center gap-1.5">
+        <i data-lucide="plus" class="w-4 h-4 flex-shrink-0"></i>
+        <span class="hidden sm:inline">Nueva Orden</span>
+      </button>
+
+      <!-- Modo oscuro y claro -->
+      <button type="button" onclick="toggleTheme()" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] pointer transition-colors" title="Cambiar tema (Claro / Oscuro)" aria-label="Cambiar tema">
+        <i id="icon-theme" data-lucide="moon" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Toggle de Sonido / Audio Feedback -->
+      <button type="button" onclick="toggleAudioFeedback()" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] pointer transition-colors" title="Activar / Desactivar sonidos" aria-label="Alternar audio feedback">
+        <i id="icon-audio" data-lucide="volume-2" class="w-4 h-4 text-blue-600 dark:text-blue-400"></i>
+      </button>
+
+      <!-- Perfil de usuario -->
+      <button type="button" onclick="openLoginModal()" class="flex items-center gap-2 pl-2 sm:pl-3 border-l border-slate-200 dark:border-[#233047] hover:bg-slate-50 dark:hover:bg-[#162032] p-1 sm:px-2 sm:py-1.5 rounded-xl transition-all pointer text-left group" title="Perfil de Usuario">
+        <div id="user-avatar" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-sm shadow-blue-500/25 flex-shrink-0">
+          JL
+        </div>
+        <div class="hidden xl:flex flex-col text-left">
+          <div class="flex items-center gap-1.5">
+            <span id="user-name" class="text-xs font-extrabold font-heading text-slate-900 dark:text-white leading-tight">JAHN PAHOL LOA ROJAS</span>
+            <span id="user-role-badge" class="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-heading text-[10px] rounded-md font-extrabold uppercase tracking-wider">ADMIN</span>
+          </div>
+          <span id="user-role-text" class="text-[11px] font-bold text-slate-500 dark:text-slate-400">Administrador del Sistema</span>
+        </div>
+      </button>
+
+      <!-- Botón cerrar sesión -->
+      <button type="button" onclick="confirmarCerrarSesion()" class="p-2 sm:px-3 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-900/60 text-rose-600 dark:text-rose-400 pointer transition-colors text-xs font-bold flex items-center gap-1.5 flex-shrink-0" title="Cerrar Sesión">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+        <span class="hidden md:inline">Salir</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenedor principal -->
+  <div class="flex-1 flex w-full pt-16 min-w-0">
+
+    <!-- Fondo oscuro para móvil -->
+    <div id="sidebar-mobile-backdrop" onclick="closeMobileSidebar()" class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs hidden lg:hidden transition-opacity"></div>
+
+    <!-- Menú lateral -->
+    <aside id="app-sidebar" class="fixed top-16 left-0 bottom-0 w-[260px] flex flex-col justify-between p-4 z-40 border-r border-slate-200 dark:border-[#233047] bg-white dark:bg-[#101726] select-none transition-transform duration-200 ease-in-out overflow-y-auto -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
+      <div class="flex flex-col gap-4">
+        <!-- Rol actual -->
+        <div id="sidebar-role-indicator" class="px-3 py-2 rounded-xl bg-slate-50 dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span id="role-indicator-dot" class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span>
+            <span id="role-indicator-text" class="text-[10px] font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider leading-tight">Administrador del Sistema</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span id="role-indicator-badge" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">ADMIN</span>
+            <button type="button" onclick="toggleSidebar()" class="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-[#1f2d47] cursor-pointer pointer transition-colors" title="Ocultar barra lateral" aria-label="Ocultar barra lateral">
+              <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Opciones del menú -->
+        <nav class="flex flex-col gap-1 text-xs font-medium">
+          <button type="button" id="nav-dashboard" onclick="switchView('dashboard')" class="side-nav-item nav-item-active text-slate-700 dark:text-slate-300 pointer">
+            <i data-lucide="layout-dashboard" class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mr-3 stroke-[2.2]"></i>
+            <span class="whitespace-nowrap truncate font-semibold">Panel Principal</span>
+          </button>
+
+          <!-- Recepción y Registro -->
+          <div class="mt-2 pt-2 border-t border-slate-100 dark:border-[#233047] flex flex-col gap-1">
+            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-1">RECEPCIÓN</span>
+            <button type="button" id="nav-clientes" onclick="switchView('clientes')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="users" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate mr-auto">Gestión de Clientes</span>
+              <span id="badge-total-clientes" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-[#1a253a] text-slate-600 dark:text-slate-300 font-mono font-bold flex-shrink-0">--</span>
+            </button>
+
+            <button type="button" id="nav-vehiculos" onclick="switchView('vehiculos')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="car" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate mr-auto">Vehículos y Fichas</span>
+              <span id="badge-total-vehiculos" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-[#1a253a] text-slate-600 dark:text-slate-300 font-mono font-bold flex-shrink-0">--</span>
+            </button>
+
+            <button type="button" id="nav-ordenes" onclick="switchView('ordenes')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="clipboard-list" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate mr-auto">Órdenes de Trabajo</span>
+              <span id="badge-total-ordenes" class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-mono font-bold flex-shrink-0">--</span>
+            </button>
+          </div>
+
+          <!-- Taller y Servicio Técnico -->
+          <div class="mt-2 pt-2 border-t border-slate-100 dark:border-[#233047] flex flex-col gap-1">
+            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-1">TALLER Y SERVICIO</span>
+            <button type="button" id="nav-diagnostico" onclick="switchView('diagnostico')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="wrench" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate mr-auto">Diagnóstico Técnico</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-bold border border-amber-200 dark:border-amber-900 flex-shrink-0">Mecánico</span>
+            </button>
+
+            <button type="button" id="nav-inventario" onclick="switchView('inventario')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="package" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate mr-auto">Inventario & Proveedores</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-bold border border-rose-200 dark:border-rose-900 flex-shrink-0">Alertas</span>
+            </button>
+
+            <button type="button" id="nav-tracking" onclick="switchView('tracking')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="radio" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate mr-auto">Tracking en Vivo</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-emerald-900 flex-shrink-0">Cliente</span>
+            </button>
+          </div>
+
+          <!-- Facturación y Reportes -->
+          <div class="mt-2 pt-2 border-t border-slate-100 dark:border-[#233047] flex flex-col gap-1">
+            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-1">FACTURACIÓN Y REPORTES</span>
+            <button type="button" id="nav-caja" onclick="switchView('caja')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="receipt" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate">Caja y Facturación</span>
+            </button>
+
+            <button type="button" id="nav-reportes" onclick="switchView('reportes')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="file-text" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate mr-auto">Reportes Gerenciales</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 font-bold border border-blue-200 dark:border-blue-900 flex-shrink-0">Filtros</span>
+            </button>
+          </div>
+
+          <!-- Sección de administración -->
+          <div id="sidebar-admin-section" class="mt-2 pt-2 border-t border-slate-100 dark:border-[#233047] flex flex-col gap-1">
+            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-1">ADMINISTRACIÓN</span>
+            <button type="button" id="nav-usuarios" onclick="switchView('usuarios')" class="side-nav-item text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white pointer">
+              <i data-lucide="shield-check" class="w-5 h-5 text-slate-400 dark:text-slate-500 flex-shrink-0 mr-3 stroke-[2]"></i>
+              <span class="whitespace-nowrap truncate">Usuarios y Roles</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main id="main-content" class="ml-0 lg:ml-[260px] flex-1 p-3.5 sm:p-6 lg:p-8 flex flex-col gap-6 max-w-none w-full min-w-0 overflow-x-hidden">
+
+      <!-- Vista: Panel principal -->
+      <div id="view-dashboard" class="app-view flex flex-col gap-6">
+
+        <!-- Encabezado -->
+        <section class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#233047]">
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Panel de Control Operativo y KPIs</h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Métricas en tiempo real del taller automotriz, flujo de órdenes y alertas de inventario.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-1.5 bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-[3px] px-3 py-1.5 text-xs text-slate-600 dark:text-slate-300 font-mono shadow-xs">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+              <span id="current-date-indicator">Hoy</span>
+            </div>
+
+            <button type="button" onclick="exportarResumenOperativo()" class="btn-scandi btn-scandi-secondary text-xs shadow-xs">
+              <i data-lucide="download" class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400"></i>
+              <span>Exportar Resumen</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Indicadores principales -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Órdenes activas -->
+          <div class="scandi-card p-5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Órdenes Activas</span>
+              <div id="kpi-ordenes-activas" class="text-3xl font-extrabold font-mono text-slate-900 dark:text-white mt-1">--</div>
+              <span class="text-xs text-blue-600 dark:text-blue-400 font-semibold">En taller y diagnóstico</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-md shadow-blue-500/10 flex-shrink-0">
+              <i data-lucide="wrench" class="w-9 h-9 stroke-[2.2]"></i>
+            </div>
+          </div>
+
+          <!-- Listas para entrega -->
+          <div class="scandi-card p-5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Listas p/ Entrega</span>
+              <div id="kpi-listas-entrega" class="text-3xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">--</div>
+              <span class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Concluidas por mecánico</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-md shadow-emerald-500/10 flex-shrink-0">
+              <i data-lucide="check-circle-2" class="w-9 h-9 stroke-[2.2]"></i>
+            </div>
+          </div>
+
+          <!-- Alertas de repuestos -->
+          <div class="scandi-card p-5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Alertas Repuestos</span>
+              <div id="kpi-alertas-stock" class="text-3xl font-extrabold font-mono text-rose-600 dark:text-rose-400 mt-1">--</div>
+              <span class="text-xs text-rose-600 dark:text-rose-400 font-semibold">Stock igual o bajo mínimo</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-rose-50 dark:bg-rose-900/40 border border-rose-200 dark:border-rose-800/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-md shadow-rose-500/10 flex-shrink-0">
+              <i data-lucide="alert-triangle" class="w-9 h-9 stroke-[2.2]"></i>
+            </div>
+          </div>
+
+          <!-- Facturación total -->
+          <div class="scandi-card p-5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Facturación Total</span>
+              <div id="kpi-facturacion-total" class="text-3xl font-extrabold font-mono text-blue-700 dark:text-blue-400 mt-1">--</div>
+              <span class="text-xs text-slate-500 dark:text-slate-400 font-semibold">Recaudación registrada</span>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-md shadow-blue-500/10 flex-shrink-0">
+              <i data-lucide="receipt" class="w-9 h-9 stroke-[2.2]"></i>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tablas de resumen -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Órdenes de trabajo en curso -->
+          <div class="scandi-card p-5 flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-xs flex-shrink-0">
+                  <i data-lucide="clipboard-list" class="w-6 h-6 stroke-[2.2]"></i>
+                </div>
+                <h3 class="font-bold text-slate-900 dark:text-white text-sm">Órdenes de Trabajo en Curso</h3>
+              </div>
+              <button type="button" onclick="switchView('ordenes')" class="text-xs text-blue-600 hover:text-blue-700 font-medium pointer">Ver todas &rarr;</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[500px] text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-[#233047] text-slate-400 font-semibold bg-slate-50/50 dark:bg-[#162032]/40">
+                    <th class="p-2.5">Código</th>
+                    <th class="p-2.5">Placa</th>
+                    <th class="p-2.5">Cliente</th>
+                    <th class="p-2.5">Estado</th>
+                    <th class="p-2.5 text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-ordenes-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                  <!-- Datos cargados dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Alertas de stock mínimo -->
+          <div class="scandi-card p-5 flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-900/40 border border-rose-200 dark:border-rose-800/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-xs flex-shrink-0">
+                  <i data-lucide="alert-triangle" class="w-6 h-6 stroke-[2.2]"></i>
+                </div>
+                <h3 class="font-bold text-rose-600 dark:text-rose-400 text-sm">Alertas de Repuestos (Stock Mínimo)</h3>
+              </div>
+              <button type="button" onclick="switchView('inventario')" class="text-xs text-blue-600 hover:text-blue-700 font-medium pointer">Ir al Catálogo &rarr;</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[540px] text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-100 dark:border-[#233047] text-slate-400 font-semibold bg-slate-50/50 dark:bg-[#162032]/40">
+                    <th class="p-2.5">Código</th>
+                    <th class="p-2.5">Repuesto</th>
+                    <th class="p-2.5">Marca</th>
+                    <th class="p-2.5">Stock</th>
+                    <th class="p-2.5">Mínimo</th>
+                    <th class="p-2.5">Ubicación</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-stock-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                  <!-- Datos cargados dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Estado de bahías de trabajo -->
+        <section class="scandi-card p-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+            <div class="flex items-center gap-3.5">
+              <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-md shadow-blue-500/10 flex-shrink-0">
+                <i data-lucide="shield" class="w-8 h-8 stroke-[2.2]"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-slate-900 dark:text-white text-base">Plano Operativo de Bahías & Elevadores</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">10 puestos de elevación hidráulica con sensores OBD y telemetría de peso.</p>
+              </div>
+            </div>
+            <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-slate-100 dark:bg-[#1a253a] text-slate-700 dark:text-slate-300">8 / 10 Ocupados</span>
+          </div>
+
+          <div id="bay-matrix-container" class="perspective-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            <!-- Bahías cargadas dinámicamente -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Vista: Gestión de clientes -->
+      <div id="view-clientes" class="app-view hidden flex flex-col gap-6">
+        <!-- Encabezado -->
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col gap-1 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Gestión de Clientes</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Padrón general y administración de clientes registrados en el taller.</p>
+          </div>
+
+          <!-- Barra de herramientas -->
+          <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 flex-1 max-w-md">
+              <div class="relative w-full">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="txt-buscar-cliente" oninput="buscarClientesWeb(this.value)" placeholder="Buscar por DNI, RUC o Nombre..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-500" aria-label="Buscar cliente">
+              </div>
+              <button type="button" onclick="cargarClientesWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2 flex items-center gap-1.5" title="Refrescar" aria-label="Refrescar lista">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="cambiarEstadoClienteSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5" title="Activar o desactivar cliente">
+                <i data-lucide="power" class="w-3.5 h-3.5 text-amber-500"></i>
+                <span>Activar / Desactivar</span>
+              </button>
+              <button type="button" onclick="eliminarClienteSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5 hover:text-rose-600 dark:hover:text-rose-400" title="Eliminar cliente del padrón">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-500"></i>
+                <span>Eliminar</span>
+              </button>
+              <button type="button" onclick="editarClienteSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                <span>Editar</span>
+              </button>
+              <button type="button" onclick="abrirModalCliente(null)" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Nuevo Cliente</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resumen de clientes -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Total Clientes</span>
+              <div id="kpi-clientes-total" class="text-xl font-extrabold font-mono text-blue-600 dark:text-blue-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Cartera total</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Personas (DNI)</span>
+              <div id="kpi-clientes-dni" class="text-xl font-extrabold font-mono text-slate-800 dark:text-slate-200 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Particulares</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Empresas (RUC)</span>
+              <div id="kpi-clientes-ruc" class="text-xl font-extrabold font-mono text-amber-600 dark:text-amber-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Comerciales</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Clientes Activos</span>
+              <div id="kpi-clientes-activos" class="text-xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Padrón activo</span>
+            </div>
+          </div>
+
+          <!-- Tabla de clientes -->
+          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+            <table class="w-full min-w-[760px] text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                  <th class="p-3 w-12 text-center">Sel</th>
+                  <th onclick="ordenarTabla('clientes', 'id_cliente', 'number')" data-sort-table="clientes" data-sort-col="id_cliente" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por ID">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>ID</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('clientes', 'tipo_documento', 'text')" data-sort-table="clientes" data-sort-col="tipo_documento" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Tipo Doc">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Tipo Doc</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('clientes', 'num_documento', 'text')" data-sort-table="clientes" data-sort-col="num_documento" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Documento">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>N° Documento</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('clientes', 'nombre_razon_social', 'text')" data-sort-table="clientes" data-sort-col="nombre_razon_social" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Nombre">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Nombre / Razón Social</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('clientes', 'telefono', 'text')" data-sort-table="clientes" data-sort-col="telefono" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Teléfono">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Teléfono</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('clientes', 'correo', 'text')" data-sort-table="clientes" data-sort-col="correo" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Correo">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Correo</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('clientes', 'direccion', 'text')" data-sort-table="clientes" data-sort-col="direccion" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Dirección">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Dirección</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('clientes', 'activo', 'text')" data-sort-table="clientes" data-sort-col="activo" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Estado">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Estado</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="clientes-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                <!-- Datos cargados dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista: Vehículos y fichas -->
+      <div id="view-vehiculos" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col gap-1 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Ficha Técnica y Registro Vehicular</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Historial técnico de unidades, números de motor/VIN y control de kilometraje.</p>
+          </div>
+
+          <!-- Barra de herramientas -->
+          <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 flex-1 max-w-md">
+              <div class="relative w-full">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="txt-buscar-vehiculo" oninput="buscarVehiculosWeb(this.value)" placeholder="Buscar por Placa o Modelo..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-500" aria-label="Buscar vehículo">
+              </div>
+              <button type="button" onclick="cargarVehiculosWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2 flex items-center gap-1.5" title="Refrescar" aria-label="Refrescar lista">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="verHistorialVehiculoSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5" title="Ver historial de intervenciones y mantenimientos">
+                <i data-lucide="history" class="w-3.5 h-3.5 text-blue-500"></i>
+                <span>Historial Técnico</span>
+              </button>
+              <button type="button" onclick="cambiarEstadoVehiculoSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5" title="Activar o desactivar vehículo">
+                <i data-lucide="power" class="w-3.5 h-3.5 text-amber-500"></i>
+                <span>Activar / Desactivar</span>
+              </button>
+              <button type="button" onclick="editarVehiculoSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                <span>Editar</span>
+              </button>
+              <button type="button" onclick="abrirModalVehiculo(null)" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Nuevo Vehículo</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resumen de vehículos -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Total Vehículos</span>
+              <div id="kpi-vehiculos-total" class="text-xl font-extrabold font-mono text-blue-600 dark:text-blue-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Parque registrado</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Vehículos Activos</span>
+              <div id="kpi-vehiculos-activos" class="text-xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Unidades operativas</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Marcas Atendidas</span>
+              <div id="kpi-vehiculos-marcas" class="text-xl font-extrabold font-mono text-amber-600 dark:text-amber-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Fabricantes</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Propietarios</span>
+              <div id="kpi-vehiculos-props" class="text-xl font-extrabold font-mono text-slate-800 dark:text-slate-200 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Clientes con auto</span>
+            </div>
+          </div>
+
+          <!-- Tabla de vehículos -->
+          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+            <table class="w-full min-w-[800px] text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                  <th class="p-3 w-12 text-center">Sel</th>
+                  <th onclick="ordenarTabla('vehiculos', 'id_vehiculo', 'number')" data-sort-table="vehiculos" data-sort-col="id_vehiculo" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por ID">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>ID</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'placa', 'text')" data-sort-table="vehiculos" data-sort-col="placa" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Placa">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Placa</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'propietario', 'text')" data-sort-table="vehiculos" data-sort-col="propietario" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Propietario">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Propietario / Cliente</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'marca', 'text')" data-sort-table="vehiculos" data-sort-col="marca" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Marca">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Marca</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'modelo', 'text')" data-sort-table="vehiculos" data-sort-col="modelo" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Modelo">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Modelo</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'anio', 'number')" data-sort-table="vehiculos" data-sort-col="anio" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Año">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Año</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'color', 'text')" data-sort-table="vehiculos" data-sort-col="color" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Color">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Color</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'kilometraje_actual', 'number')" data-sort-table="vehiculos" data-sort-col="kilometraje_actual" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer text-right" title="Clic para ordenar por Kilometraje">
+                    <div class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                      <span>Kilometraje</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'num_vin', 'text')" data-sort-table="vehiculos" data-sort-col="num_vin" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por N° VIN">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>N° VIN</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('vehiculos', 'activo', 'text')" data-sort-table="vehiculos" data-sort-col="activo" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Estado">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Estado</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="vehiculos-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                <!-- Datos cargados dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista: Órdenes de trabajo -->
+      <div id="view-ordenes" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col gap-1 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Órdenes de Trabajo y Diagnóstico (OT)</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Control de ingresos vehiculares, diagnósticos técnicos y flujo de servicio.</p>
+          </div>
+
+          <!-- Barra de herramientas -->
+          <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2 flex-1">
+              <div class="relative w-64">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="txt-buscar-orden" oninput="filtrarOrdenesWeb()" placeholder="Buscar por OT, Placa o Cliente..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-500" aria-label="Buscar orden de trabajo">
+              </div>
+
+              <div class="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                <span class="font-medium">Estado:</span>
+                <select id="cmb-filtro-estado-orden" onchange="filtrarOrdenesWeb()" class="px-2.5 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 font-medium" aria-label="Filtrar por estado de orden">
+                  <option value="TODOS">TODOS</option>
+                  <option value="REGISTRADO">REGISTRADO</option>
+                  <option value="EN_DIAGNOSTICO">EN_DIAGNOSTICO</option>
+                  <option value="EN_REPARACION">EN_REPARACION</option>
+                  <option value="EN_PRUEBAS">EN_PRUEBAS</option>
+                  <option value="LISTO">LISTO</option>
+                  <option value="ENTREGADO">ENTREGADO</option>
+                  <option value="CANCELADO">CANCELADO</option>
+                </select>
+              </div>
+
+              <button type="button" onclick="cargarOrdenesWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2" title="Refrescar" aria-label="Refrescar lista">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="imprimirOrdenPDFWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                <span>Imprimir PDF</span>
+              </button>
+              <button type="button" onclick="abrirModalCambiarEstadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5 text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/40">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span>Cambiar Estado</span>
+              </button>
+              <button type="button" onclick="verDetalleOrdenSeleccionadaWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                <span>Ver / Editar</span>
+              </button>
+              <button type="button" onclick="openNewOrderModal()" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Nueva Orden</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resumen de órdenes -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Total Órdenes</span>
+              <div id="kpi-ordenes-total-count" class="text-xl font-extrabold font-mono text-blue-600 dark:text-blue-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Registradas</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">En Taller</span>
+              <div id="kpi-ordenes-en-taller" class="text-xl font-extrabold font-mono text-amber-600 dark:text-amber-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Diagnóstico / Proceso</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Listas / Entregadas</span>
+              <div id="kpi-ordenes-listas" class="text-xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Servicios concluidos</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Facturación Total</span>
+              <div id="kpi-ordenes-monto-total" class="text-xl font-extrabold font-mono text-blue-700 dark:text-blue-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Total acumulado</span>
+            </div>
+          </div>
+
+          <!-- Tabla de órdenes -->
+          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+            <table class="w-full min-w-[880px] text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                  <th class="p-3 w-12 text-center">Sel</th>
+                  <th onclick="ordenarTabla('ordenes', 'codigo_orden', 'text')" data-sort-table="ordenes" data-sort-col="codigo_orden" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por N° OT">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>N° OT</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'fecha_ingreso', 'date')" data-sort-table="ordenes" data-sort-col="fecha_ingreso" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Fecha">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Fecha</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'placa', 'text')" data-sort-table="ordenes" data-sort-col="placa" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Placa">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Placa</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'vehiculo', 'text')" data-sort-table="ordenes" data-sort-col="vehiculo" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Vehículo">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Vehículo</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'cliente_nombre', 'text')" data-sort-table="ordenes" data-sort-col="cliente_nombre" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Cliente">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Cliente</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'mecanico_nombre', 'text')" data-sort-table="ordenes" data-sort-col="mecanico_nombre" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Mecánico">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Mecánico Asignado</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'estado', 'text')" data-sort-table="ordenes" data-sort-col="estado" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer" title="Clic para ordenar por Estado">
+                    <div class="flex items-center gap-1.5 whitespace-nowrap">
+                      <span>Estado</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'total_mano_obra', 'number')" data-sort-table="ordenes" data-sort-col="total_mano_obra" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer text-right" title="Clic para ordenar por Mano de Obra">
+                    <div class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                      <span>Mano Obra</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'total_repuestos', 'number')" data-sort-table="ordenes" data-sort-col="total_repuestos" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer text-right" title="Clic para ordenar por Repuestos">
+                    <div class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                      <span>Repuestos</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'total_general', 'number')" data-sort-table="ordenes" data-sort-col="total_general" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer text-right" title="Clic para ordenar por Total">
+                    <div class="flex items-center justify-end gap-1.5 whitespace-nowrap">
+                      <span>Total</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                  <th onclick="ordenarTabla('ordenes', 'pagado', 'text')" data-sort-table="ordenes" data-sort-col="pagado" class="p-3 select-none pointer hover:bg-slate-100 dark:hover:bg-[#1a253a] transition-colors group cursor-pointer text-center" title="Clic para ordenar por Estado de Pago">
+                    <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
+                      <span>Pagado</span>
+                      <span class="sort-icon-slot inline-flex items-center"></span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="ordenes-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                <!-- Datos cargados dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista: Diagnóstico técnico -->
+      <div id="view-diagnostico" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 text-[10px] font-mono font-extrabold uppercase tracking-wider">Módulo Técnico Especializado</span>
+              </div>
+              <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">Diagnóstico Técnico Automotriz y Peritaje de Ingreso</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Inspección de subsistemas, hoja de peritaje de carrocería y dictamen técnico emitido por el mecánico.</p>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button type="button" onclick="imprimirDiagnosticoPDFWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                <span>Imprimir Ficha Técnica</span>
+              </button>
+              <button type="button" onclick="guardarDiagnosticoWeb()" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                <span>Guardar Dictamen</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Selector de orden -->
+          <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/70 dark:bg-[#162032]/70 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 flex-1">
+              <label for="diag-select-ot" class="text-xs font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">Vehículo / OT a Diagnosticar:</label>
+              <select id="diag-select-ot" onchange="cargarDiagnosticoSeleccionado(this.value)" class="w-full md:w-96 px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#101726] text-slate-800 dark:text-slate-200 font-semibold focus:outline-none focus:border-blue-500">
+                <!-- Datos cargados dinámicamente -->
+              </select>
+            </div>
+            <div id="diag-vehiculo-badge" class="flex items-center gap-3 text-xs">
+              <!-- Datos rápidos -->
+            </div>
+          </div>
+
+          <!-- Peritaje y ficha de subsistemas -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Peritaje de carrocería -->
+            <div class="lg:col-span-5 flex flex-col gap-4">
+              <div class="p-5 rounded-2xl border border-slate-200 dark:border-[#233047] bg-white dark:bg-[#162032] flex flex-col gap-4">
+                <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#233047]">
+                  <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">Peritaje de Ingreso</h3>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Inspección de daños preexistentes al recibir la unidad.</p>
+                  </div>
+                </div>
+
+                <!-- Datos de entrada -->
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label for="diag-input-km" class="text-[10px] font-bold text-slate-400 uppercase">Km al Ingresar</label>
+                    <input type="number" id="diag-input-km" value="78420" class="w-full mt-1 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-mono font-bold text-slate-800 dark:text-slate-200">
+                  </div>
+                  <div>
+                    <label for="diag-select-gas" class="text-[10px] font-bold text-slate-400 uppercase">Nivel Combustible</label>
+                    <select id="diag-select-gas" class="w-full mt-1 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-medium text-slate-800 dark:text-slate-200">
+                      <option value="Reserva">Reserva (E)</option>
+                      <option value="1/4 Tanque">1/4 Tanque</option>
+                      <option value="1/2 Tanque" selected>1/2 Tanque</option>
+                      <option value="3/4 Tanque">3/4 Tanque</option>
+                      <option value="Tanque Lleno">Tanque Lleno (F)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Revisión exterior -->
+                <div class="flex flex-col gap-2.5 pt-2">
+                  <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">Inspección Perimétrica del Vehículo:</span>
+                  
+                  <div class="space-y-2 text-xs">
+                    <div class="p-2.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/50 dark:bg-[#101726]/50">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                          <i data-lucide="car" class="w-3.5 h-3.5 text-blue-500"></i> Frontal y Capó:
+                        </span>
+                        <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded">Sin Impactos</span>
+                      </div>
+                      <input type="text" id="diag-danos-frontal" value="Ópticas y parabrisas en perfecto estado. Sin fisuras." class="w-full text-[11px] px-2.5 py-1 rounded border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-600 dark:text-slate-300">
+                    </div>
+
+                    <div class="p-2.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/50 dark:bg-[#101726]/50">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                          <i data-lucide="car" class="w-3.5 h-3.5 text-amber-500"></i> Lateral Derecho:
+                        </span>
+                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded">Rayón Previo</span>
+                      </div>
+                      <input type="text" id="diag-danos-lateral-der" value="Rayón superficial de 12cm en guardafango posterior derecho." class="w-full text-[11px] px-2.5 py-1 rounded border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-600 dark:text-slate-300">
+                    </div>
+
+                    <div class="p-2.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/50 dark:bg-[#101726]/50">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                          <i data-lucide="car" class="w-3.5 h-3.5 text-blue-500"></i> Posterior y Maletera:
+                        </span>
+                        <span class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded">Conforme</span>
+                      </div>
+                      <input type="text" id="diag-danos-posterior" value="Parachoques y compuerta trasera alineados. Llave de rueda y gata presentes." class="w-full text-[11px] px-2.5 py-1 rounded border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-600 dark:text-slate-300">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-3 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/60 text-[11px] text-blue-800 dark:text-blue-300 flex items-start gap-2">
+                  <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                  <span>Ficha técnica de peritaje e inventario de recepción debidamente certificada con la conformidad del cliente y del asesor técnico.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Evaluación técnica -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+              <div class="p-5 rounded-2xl border border-slate-200 dark:border-[#233047] bg-white dark:bg-[#162032] flex flex-col gap-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                      <i data-lucide="wrench" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider">Evaluación Técnica en Fosa (Mecánico)</h3>
+                      <p class="text-[11px] text-slate-500 dark:text-slate-400">Revisión profunda de componentes para cotización de repuestos.</p>
+                    </div>
+                  </div>
+                  <span id="diag-mecanico-name" class="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">Mecánico: Carlos Mendoza</span>
+                </div>
+
+                <!-- Subsistemas automotrices -->
+                <div id="diag-subsistemas-list" class="flex flex-col gap-3">
+                  <!-- Datos cargados dinámicamente -->
+                </div>
+
+                <!-- Requerimiento de repuestos con control de stock -->
+                <div class="pt-3 border-t border-slate-100 dark:border-[#233047] flex flex-col gap-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <i data-lucide="package" class="w-3.5 h-3.5 text-blue-500"></i>
+                      Requerimiento de Repuestos (Verificación de Stock en Almacén)
+                    </span>
+                    <span id="diag-repuesto-stock-info" class="text-[10px] font-mono text-slate-500">Seleccione un repuesto</span>
+                  </div>
+
+                  <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <select id="diag-repuesto-select" onchange="actualizarInfoStockRepuestoDiag(this.value)" class="flex-1 p-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-medium text-slate-800 dark:text-slate-200">
+                      <!-- Cargado dinámicamente -->
+                    </select>
+                    <div class="flex items-center gap-1.5">
+                      <input type="number" id="diag-repuesto-cantidad" min="1" value="1" class="w-20 p-2 text-xs font-mono font-bold rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-center" title="Cantidad requerida">
+                      <button type="button" onclick="agregarRepuestoADiagnosticoWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2 flex items-center gap-1 flex-shrink-0">
+                        <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                        <span>Agregar</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="diag-repuestos-agregados-container" class="overflow-x-auto rounded-lg border border-slate-200 dark:border-[#233047] max-h-40 overflow-y-auto">
+                    <!-- Lista de repuestos cargados -->
+                  </div>
+                </div>
+
+                <!-- Servicios de Mano de Obra adicionales -->
+                <div class="pt-3 border-t border-slate-100 dark:border-[#233047] flex flex-col gap-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <i data-lucide="wrench" class="w-3.5 h-3.5 text-amber-500"></i>
+                      Servicios de Mano de Obra Aplicables
+                    </span>
+                  </div>
+
+                  <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <select id="diag-servicio-select" class="flex-1 p-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-medium text-slate-800 dark:text-slate-200">
+                      <!-- Cargado dinámicamente -->
+                    </select>
+                    <button type="button" onclick="agregarServicioADiagnosticoWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2 flex items-center gap-1 flex-shrink-0">
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                      <span>Agregar Servicio</span>
+                    </button>
+                  </div>
+
+                  <div id="diag-servicios-agregados-container" class="overflow-x-auto rounded-lg border border-slate-200 dark:border-[#233047] max-h-36 overflow-y-auto">
+                    <!-- Lista de servicios cargados -->
+                  </div>
+                </div>
+
+                <!-- Dictamen y presupuesto -->
+                <div class="pt-3 border-t border-slate-100 dark:border-[#233047] flex flex-col gap-3">
+                  <label for="diag-dictamen-texto" class="text-xs font-bold text-slate-700 dark:text-slate-300">Dictamen y Recomendación del Mecánico:</label>
+                  <textarea id="diag-dictamen-texto" rows="3" class="w-full p-3 text-xs rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-800 dark:text-slate-200 font-sans focus:outline-none focus:border-blue-500"></textarea>
+
+                  <!-- Costos estimados -->
+                  <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] grid grid-cols-3 gap-3 text-center">
+                    <div>
+                      <span class="text-[10px] font-bold text-slate-400 uppercase">Mano de Obra</span>
+                      <div id="diag-costo-mo" class="text-sm font-bold font-mono text-slate-800 dark:text-slate-200 mt-0.5">S/. 250.00</div>
+                      <span id="diag-horas-mo" class="text-[10px] text-slate-500">3.5 hrs estimadas</span>
+                    </div>
+                    <div>
+                      <span class="text-[10px] font-bold text-slate-400 uppercase">Repuestos Estimados</span>
+                      <div id="diag-costo-rep" class="text-sm font-bold font-mono text-slate-800 dark:text-slate-200 mt-0.5">S/. 345.00</div>
+                      <span class="text-[10px] text-slate-500">3 piezas requeridas</span>
+                    </div>
+                    <div>
+                      <span class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase">Presupuesto Total</span>
+                      <div id="diag-costo-total" class="text-sm font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">S/. 595.00</div>
+                      <span class="text-[10px] text-emerald-500 font-semibold">Incluye IGV</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista: Seguimiento en línea -->
+      <div id="view-tracking" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 text-[10px] font-mono font-extrabold uppercase tracking-wider">Portal Público de Clientes</span>
+              </div>
+              <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">Portal de Seguimiento para Clientes — Rastreo en Vivo</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Consulta transparente para conductores y administradores de flota sobre el estado de su vehículo en el taller.</p>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button type="button" onclick="copiarLinkTrackingWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                <span>Compartir Link</span>
+              </button>
+              <button type="button" onclick="imprimirProformaOrdenPDF()" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Descargar Proforma</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Buscador por placa u orden -->
+          <div class="p-5 rounded-2xl border border-slate-200 dark:border-[#233047] bg-white dark:bg-[#162032] flex flex-col gap-4">
+            <div class="flex flex-col md:flex-row items-center gap-3">
+              <div class="relative flex-1 w-full">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3"></i>
+                <input type="text" id="txt-tracking-placa" placeholder="Ingresa tu Placa (ej. B3X-892) o N° de Orden (ej. OT-2026-001)..." class="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-800 dark:text-slate-200 font-medium focus:outline-none focus:border-blue-500" aria-label="Consultar placa para seguimiento">
+              </div>
+              <button type="button" onclick="buscarTrackingWeb()" class="w-full md:w-auto btn-scandi btn-scandi-primary text-xs px-6 py-2.5 flex items-center justify-center gap-2">
+                <i data-lucide="search" class="w-4 h-4"></i>
+                <span>Consultar Estado</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resultado del seguimiento -->
+          <div id="tracking-result-container" class="flex flex-col gap-6">
+            <!-- Datos cargados dinámicamente -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista: Inventario y servicios -->
+      <div id="view-inventario" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col gap-1 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Catálogo de Inventario y Servicios</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Control de stock de repuestos y tarifario oficial de mano de obra.</p>
+          </div>
+
+          <!-- Pestañas -->
+          <div class="flex items-center gap-2 border-b border-slate-200 dark:border-[#233047]">
+            <button type="button" id="tab-btn-repuestos" onclick="switchInventarioTab('repuestos')" class="px-4 py-2.5 text-xs font-bold text-blue-600 border-b-2 border-blue-600 flex items-center gap-2 pointer transition-colors">
+              <i data-lucide="package" class="w-4 h-4"></i>
+              <span>Repuestos (Piezas y Componentes)</span>
+            </button>
+            <button type="button" id="tab-btn-servicios" onclick="switchInventarioTab('servicios')" class="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2 pointer transition-colors">
+              <i data-lucide="wrench" class="w-4 h-4"></i>
+              <span>Servicios (Mano de Obra)</span>
+            </button>
+          </div>
+
+          <!-- Pestaña: Repuestos -->
+          <div id="tab-content-repuestos" class="flex flex-col gap-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              <div class="relative w-full md:w-80">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="txt-buscar-repuesto" oninput="filtrarRepuestosWeb(this.value)" placeholder="Buscar por Código, Repuesto o Marca..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-500" aria-label="Buscar repuesto en inventario">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="cargarRepuestosWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2" title="Refrescar" aria-label="Refrescar lista">
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                </button>
+                <button type="button" onclick="cambiarEstadoRepuestoSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5" title="Activar o desactivar repuesto">
+                  <i data-lucide="power" class="w-3.5 h-3.5 text-amber-500"></i>
+                  <span>Activar / Desactivar</span>
+                </button>
+                <button type="button" onclick="editarRepuestoSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  <span>Editar</span>
+                </button>
+                <button type="button" onclick="abrirModalAjusteStockWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                  <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                  <span>Ajustar Stock</span>
+                </button>
+                <button type="button" onclick="abrirModalRepuesto(null)" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>Nuevo Repuesto</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+              <table class="w-full min-w-[880px] text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                    <th class="p-3 w-12 text-center">Sel</th>
+                    <th class="p-3">Código</th>
+                    <th class="p-3">Repuesto</th>
+                    <th class="p-3">Marca</th>
+                    <th class="p-3">Categoría</th>
+                    <th class="p-3">P. Compra</th>
+                    <th class="p-3">P. Venta</th>
+                    <th class="p-3">Stock Actual</th>
+                    <th class="p-3">Stock Mínimo</th>
+                    <th class="p-3">Ubicación</th>
+                    <th class="p-3">Alerta</th>
+                  </tr>
+                </thead>
+                <tbody id="repuestos-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                  <!-- Datos cargados dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pestaña: Servicios -->
+          <div id="tab-content-servicios" class="hidden flex flex-col gap-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              <div class="relative w-full md:w-80">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="txt-buscar-servicio" oninput="filtrarServiciosWeb(this.value)" placeholder="Buscar por Código o Nombre de Servicio..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-500" aria-label="Buscar servicio">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="cargarServiciosWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2" title="Refrescar" aria-label="Refrescar lista">
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                </button>
+                <button type="button" onclick="cambiarEstadoServicioSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5" title="Activar o desactivar servicio">
+                  <i data-lucide="power" class="w-3.5 h-3.5 text-amber-500"></i>
+                  <span>Activar / Desactivar</span>
+                </button>
+                <button type="button" onclick="editarServicioSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                  <span>Editar</span>
+                </button>
+                <button type="button" onclick="abrirModalServicio(null)" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                  <span>Nuevo Servicio</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+              <table class="w-full min-w-[650px] text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                    <th class="p-3">Código</th>
+                    <th class="p-3">Servicio (Mano de Obra)</th>
+                    <th class="p-3">Tipo / Familia</th>
+                    <th class="p-3">Precio Base</th>
+                    <th class="p-3">Tiempo Estimado</th>
+                    <th class="p-3">Descripción</th>
+                    <th class="p-3">Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="servicios-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                  <!-- Datos cargados dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista: Caja y facturación -->
+      <div id="view-caja" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col gap-1 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Caja y Facturación Transparente</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Gestión de cobros en efectivo, órdenes pendientes de liquidar e historial de comprobantes emitidos.</p>
+          </div>
+
+          <!-- Resumen de caja -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Recaudación Total</span>
+              <div id="kpi-caja-recaudacion" class="text-xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Cobrado en caja</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Comprobantes Emitidos</span>
+              <div id="kpi-caja-emitidos-count" class="text-xl font-extrabold font-mono text-blue-600 dark:text-blue-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Documentos cobrados</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Por Cobrar (Pendiente)</span>
+              <div id="kpi-caja-por-cobrar" class="text-xl font-extrabold font-mono text-amber-600 dark:text-amber-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Monto en espera</span>
+            </div>
+            <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span class="text-[11px] font-bold text-slate-400 uppercase">Órdenes por Liquidar</span>
+              <div id="kpi-caja-ordenes-liquidar" class="text-xl font-extrabold font-mono text-purple-600 dark:text-purple-400 mt-1">--</div>
+              <span class="text-[10px] text-slate-500">Autos para entrega</span>
+            </div>
+          </div>
+
+          <!-- Pestañas de caja -->
+          <div class="flex items-center gap-2 border-b border-slate-200 dark:border-[#233047]">
+            <button type="button" id="tab-btn-caja-pendientes" onclick="switchCajaTab('pendientes')" class="px-4 py-2.5 text-xs font-bold text-blue-600 border-b-2 border-blue-600 flex items-center gap-2 pointer transition-colors">
+              <i data-lucide="clock" class="w-4 h-4"></i>
+              <span>Órdenes Pendientes de Cobro</span>
+            </button>
+            <button type="button" id="tab-btn-caja-emitidos" onclick="switchCajaTab('emitidos')" class="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2 pointer transition-colors">
+              <i data-lucide="receipt" class="w-4 h-4"></i>
+              <span>Historial de Comprobantes Emitidos</span>
+            </button>
+            <button type="button" id="tab-btn-caja-arqueo" onclick="switchCajaTab('arqueo')" class="px-4 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2 pointer transition-colors">
+              <i data-lucide="scale" class="w-4 h-4"></i>
+              <span>Arqueo y Cierre Diario (RF13)</span>
+            </button>
+          </div>
+
+          <!-- Pestaña: Pendientes de cobro -->
+          <div id="tab-content-caja-pendientes" class="flex flex-col gap-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              <div class="relative w-full md:w-80">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="txt-buscar-caja-pendiente" oninput="filtrarCajaPendientesWeb(this.value)" placeholder="Buscar por Placa, N° Orden o Cliente..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-500" aria-label="Buscar orden pendiente en caja">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="cargarCajaWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2" title="Refrescar" aria-label="Refrescar lista">
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                </button>
+                <button type="button" onclick="cobrarOrdenSeleccionadaCajaWeb()" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                  <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
+                  <span>Cobrar Orden Seleccionada</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+              <table class="w-full min-w-[760px] text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                    <th class="p-3 w-12 text-center">Sel</th>
+                    <th class="p-3">ID</th>
+                    <th class="p-3">N° Orden</th>
+                    <th class="p-3">Placa</th>
+                    <th class="p-3">Vehículo / Modelo</th>
+                    <th class="p-3">Cliente</th>
+                    <th class="p-3">Teléfono</th>
+                    <th class="p-3">Total a Cobrar</th>
+                    <th class="p-3">Estado del Auto</th>
+                  </tr>
+                </thead>
+                <tbody id="caja-pendientes-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                  <!-- Datos cargados dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pestaña: Historial emitidos -->
+          <div id="tab-content-caja-emitidos" class="hidden flex flex-col gap-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+              <div class="relative w-full md:w-80">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                <input type="text" id="txt-buscar-caja-emitido" oninput="filtrarCajaEmitidosWeb(this.value)" placeholder="Buscar por Serie, Cliente o Placa..." class="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032] text-slate-800 dark:text-slate-200 focus:outline-none focus:border-blue-500" aria-label="Buscar comprobante emitido">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="cargarCajaWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2" title="Refrescar" aria-label="Refrescar lista">
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                </button>
+                <button type="button" onclick="imprimirComprobanteEmitidoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                  <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                  <span>Imprimir PDF</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+              <table class="w-full min-w-[880px] text-left text-xs border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                    <th class="p-3 w-12 text-center">Sel</th>
+                    <th class="p-3">ID</th>
+                    <th class="p-3">N° Comprobante</th>
+                    <th class="p-3">Tipo</th>
+                    <th class="p-3">N° Orden</th>
+                    <th class="p-3">Placa</th>
+                    <th class="p-3">Cliente / Razón Social</th>
+                    <th class="p-3">Subtotal</th>
+                    <th class="p-3">IGV (18%)</th>
+                    <th class="p-3">Total</th>
+                    <th class="p-3">Fecha y Hora</th>
+                    <th class="p-3">Método</th>
+                  </tr>
+                </thead>
+                <tbody id="caja-emitidos-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                  <!-- Datos cargados dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista: Reportes gerenciales -->
+      
+          <!-- Arqueo y cierre diario de caja -->
+          <div id="tab-content-caja-arqueo" class="hidden flex flex-col gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+                <span class="text-[11px] font-bold text-slate-400 uppercase">Fondo Fijo Inicial</span>
+                <div id="arqueo-fondo-fijo" class="text-xl font-extrabold font-mono text-slate-800 dark:text-slate-100 mt-1">S/ 300.00</div>
+                <span class="text-[10px] text-slate-500">Apertura de turno</span>
+              </div>
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+                <span class="text-[11px] font-bold text-slate-400 uppercase">Cobrado en Efectivo</span>
+                <div id="arqueo-ingresos-efectivo" class="text-xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">S/ 0.00</div>
+                <span class="text-[10px] text-slate-500">Caja física</span>
+              </div>
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+                <span class="text-[11px] font-bold text-slate-400 uppercase">Cobrado Digital (Yape/Tarj)</span>
+                <div id="arqueo-ingresos-digitales" class="text-xl font-extrabold font-mono text-blue-600 dark:text-blue-400 mt-1">S/ 0.00</div>
+                <span class="text-[10px] text-slate-500">Banco / Billeteras</span>
+              </div>
+              <div class="p-4 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20">
+                <span class="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase">Saldo Teórico Esperado</span>
+                <div id="arqueo-saldo-teorico" class="text-xl font-extrabold font-mono text-blue-700 dark:text-blue-300 mt-1">S/ 300.00</div>
+                <span class="text-[10px] text-slate-500">Fondo + Efectivo</span>
+              </div>
+            </div>
+
+            <!-- Tabla de Conteo Físico -->
+            <div class="p-5 rounded-2xl border border-slate-200 dark:border-[#233047] bg-white dark:bg-[#162032] flex flex-col gap-4">
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-[#233047] pb-3">
+                <div>
+                  <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">Conteo Físico de Efectivo en Caja</h4>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400">Ingrese la cantidad de unidades de cada denominación para cuadrar caja:</p>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs text-slate-400">Total Físico Contado:</span>
+                  <div id="arqueo-total-contado" class="text-lg font-black font-mono text-slate-900 dark:text-white">S/ 0.00</div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Billetes S/ 100:</label>
+                  <input type="number" id="arq-billete-100" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Billetes S/ 50:</label>
+                  <input type="number" id="arq-billete-50" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Billetes S/ 20:</label>
+                  <input type="number" id="arq-billete-20" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Billetes S/ 10:</label>
+                  <input type="number" id="arq-billete-10" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Monedas S/ 5:</label>
+                  <input type="number" id="arq-moneda-5" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Monedas S/ 2:</label>
+                  <input type="number" id="arq-moneda-2" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Monedas S/ 1:</label>
+                  <input type="number" id="arq-moneda-1" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+                <div>
+                  <label class="font-bold text-slate-600 dark:text-slate-300">Monedas S/ 0.50:</label>
+                  <input type="number" id="arq-moneda-050" min="0" value="0" oninput="calcularDiferenciaArqueo()" class="w-full mt-1 p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+                </div>
+              </div>
+
+              <!-- Cuadre final -->
+              <div class="mt-4 p-4 rounded-xl bg-slate-50 dark:bg-[#101726] border border-slate-200 dark:border-[#2a3b56] flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-bold text-slate-500">Diferencia (Sobrante/Faltante):</span>
+                  <span id="arqueo-diferencia" class="text-lg font-black font-mono text-emerald-600 dark:text-emerald-400">S/ 0.00</span>
+                </div>
+                <button type="button" onclick="procesarCierreCajaWeb()" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4"></i>
+                  <span>Generar Acta de Cierre y Liquidación</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+<div id="view-reportes" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          
+          <!-- Encabezado de reportes -->
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 text-[10px] font-mono font-extrabold uppercase tracking-wider">Centro de Inteligencia Gerencial</span>
+              </div>
+              <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">Generador de Reportes Gerenciales y Auditoría con Filtros</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Filtrado diario y por rangos de fecha, balances comparativos de mano de obra vs repuestos, y reposición con proveedores directos.</p>
+            </div>
+            
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button type="button" onclick="imprimirReporteActualPDF()" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span>Imprimir / Exportar Reporte PDF</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Selector de tipo de reporte -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <button type="button" id="btn-rep-tipo-financiero" onclick="seleccionarTipoReporte('financiero')" class="p-3.5 rounded-xl border border-blue-600 bg-blue-50/60 dark:bg-blue-900/20 text-left transition-all pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[10px] font-mono font-extrabold text-blue-700 dark:text-blue-300 uppercase">Financiero</span>
+                <i data-lucide="dollar-sign" class="w-4 h-4 text-blue-600"></i>
+              </div>
+              <h4 class="text-xs font-extrabold text-slate-900 dark:text-white">Ventas & Rentabilidad</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Mano de Obra vs Repuestos</p>
+            </button>
+
+            <button type="button" id="btn-rep-tipo-stock" onclick="seleccionarTipoReporte('stock')" class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-left transition-all pointer hover:border-slate-300">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[10px] font-mono font-extrabold text-slate-500 uppercase">Inventario</span>
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
+              </div>
+              <h4 class="text-xs font-extrabold text-slate-900 dark:text-white">Stock Crítico & Compras</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Directorio de Proveedores</p>
+            </button>
+
+            <button type="button" id="btn-rep-tipo-historial" onclick="seleccionarTipoReporte('historial')" class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-left transition-all pointer hover:border-slate-300">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[10px] font-mono font-extrabold text-slate-500 uppercase">Historial</span>
+                <i data-lucide="car" class="w-4 h-4 text-blue-500"></i>
+              </div>
+              <h4 class="text-xs font-extrabold text-slate-900 dark:text-white">Historial Clínico Auto</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Trazabilidad por Placa</p>
+            </button>
+
+            <button type="button" id="btn-rep-tipo-garantias" onclick="seleccionarTipoReporte('garantias')" class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-left transition-all pointer hover:border-slate-300">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[10px] font-mono font-extrabold text-slate-500 uppercase">Control</span>
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+              </div>
+              <h4 class="text-xs font-extrabold text-slate-900 dark:text-white">Garantías & Mermas</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Repuestos Defectuosos</p>
+            </button>
+          </div>
+
+          <!-- Filtros de búsqueda -->
+          <div class="p-4 rounded-2xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/80 dark:bg-[#162032]/80 flex flex-col gap-3">
+            <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+              <!-- Rangos de fecha -->
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-slate-600 dark:text-slate-400">Desde:</span>
+                  <input type="date" id="rep-filtro-desde" value="2026-09-01" onchange="actualizarEstilosBotonesRango(null); aplicarFiltrosReporte();" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#101726] text-slate-800 dark:text-slate-200 font-medium cursor-pointer" aria-label="Fecha inicial de reporte">
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-slate-600 dark:text-slate-400">Hasta:</span>
+                  <input type="date" id="rep-filtro-hasta" value="2026-09-25" onchange="actualizarEstilosBotonesRango(null); aplicarFiltrosReporte();" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#101726] text-slate-800 dark:text-slate-200 font-medium cursor-pointer" aria-label="Fecha final de reporte">
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-slate-600 dark:text-slate-400">Estado:</span>
+                  <select id="rep-filtro-estado" onchange="aplicarFiltrosReporte()" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#101726] text-slate-800 dark:text-slate-200 font-medium cursor-pointer" aria-label="Filtrar reporte por estado">
+                    <option value="TODOS">Todos los Estados</option>
+                    <option value="COMPLETADOS">Listos y Entregados</option>
+                    <option value="EN_TALLER">En Proceso / Taller</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-slate-600 dark:text-slate-400">Técnico:</span>
+                  <select id="rep-filtro-mecanico" onchange="aplicarFiltrosReporte()" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#101726] text-slate-800 dark:text-slate-200 font-medium cursor-pointer" aria-label="Filtrar reporte por técnico mecánico">
+                    <option value="TODOS">Todos los Técnicos</option>
+                  </select>
+                </div>
+                <button type="button" onclick="aplicarFiltrosReporte()" class="btn-scandi btn-scandi-primary text-xs px-3 py-1.5 flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="filter" class="w-3.5 h-3.5"></i>
+                  <span>Filtrar</span>
+                </button>
+              </div>
+
+              <!-- Botones de rango rápido -->
+              <div class="flex flex-wrap items-center gap-1.5 text-[11px]" id="rep-rangos-rapidos-container">
+                <span class="text-slate-400 font-semibold mr-1">Rango Rápido:</span>
+                <button type="button" id="btn-rango-hoy" onclick="setRangoReporte('hoy')" class="btn-rango-preset px-2.5 py-1 rounded bg-white hover:bg-slate-100 dark:bg-[#101726] dark:hover:bg-[#1a253a] border border-slate-200 dark:border-[#2a3b56] text-slate-700 dark:text-slate-300 font-bold transition-all cursor-pointer">Hoy</button>
+                <button type="button" id="btn-rango-ayer" onclick="setRangoReporte('ayer')" class="btn-rango-preset px-2.5 py-1 rounded bg-white hover:bg-slate-100 dark:bg-[#101726] dark:hover:bg-[#1a253a] border border-slate-200 dark:border-[#2a3b56] text-slate-700 dark:text-slate-300 font-bold transition-all cursor-pointer">Ayer</button>
+                <button type="button" id="btn-rango-semana" onclick="setRangoReporte('semana')" class="btn-rango-preset px-2.5 py-1 rounded bg-white hover:bg-slate-100 dark:bg-[#101726] dark:hover:bg-[#1a253a] border border-slate-200 dark:border-[#2a3b56] text-slate-700 dark:text-slate-300 font-bold transition-all cursor-pointer">Últimos 7 Días</button>
+                <button type="button" id="btn-rango-mes_actual" onclick="setRangoReporte('mes_actual')" class="btn-rango-preset px-2.5 py-1 rounded bg-blue-600 dark:bg-blue-600 text-white border border-blue-600 font-bold shadow-xs transition-all cursor-pointer">Mes Actual</button>
+                <button type="button" id="btn-rango-mes_pasado" onclick="setRangoReporte('mes_pasado')" class="btn-rango-preset px-2.5 py-1 rounded bg-white hover:bg-slate-100 dark:bg-[#101726] dark:hover:bg-[#1a253a] border border-slate-200 dark:border-[#2a3b56] text-slate-700 dark:text-slate-300 font-bold transition-all cursor-pointer">Mes Anterior</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicadores del reporte -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span id="rep-kpi-1-label" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Facturación Total</span>
+              <div id="rep-kpi-1-val" class="text-xl font-extrabold font-mono text-blue-600 dark:text-blue-400 mt-1">--</div>
+              <span id="rep-kpi-1-sub" class="text-[10px] text-slate-500 font-medium">Período seleccionado</span>
+            </div>
+
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span id="rep-kpi-2-label" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mano de Obra</span>
+              <div id="rep-kpi-2-val" class="text-xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">--</div>
+              <span id="rep-kpi-2-sub" class="text-[10px] text-slate-500 font-medium">Servicios ejecutados</span>
+            </div>
+
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span id="rep-kpi-3-label" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Repuestos Instalados</span>
+              <div id="rep-kpi-3-val" class="text-xl font-extrabold font-mono text-amber-600 dark:text-amber-400 mt-1">--</div>
+              <span id="rep-kpi-3-sub" class="text-[10px] text-slate-500 font-medium">Piezas facturadas</span>
+            </div>
+
+            <div class="p-4 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#162032]">
+              <span id="rep-kpi-4-label" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Margen Neto Estimado</span>
+              <div id="rep-kpi-4-val" class="text-xl font-extrabold font-mono text-slate-800 dark:text-slate-200 mt-1">--</div>
+              <span id="rep-kpi-4-sub" class="text-[10px] text-slate-500 font-medium">Rentabilidad del taller</span>
+            </div>
+          </div>
+
+          <!-- Tabla del reporte -->
+          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+            <table class="w-full min-w-[700px] text-left text-xs border-collapse">
+              <thead id="rep-table-header">
+                <!-- Encabezado dinámico -->
+              </thead>
+              <tbody id="rep-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                <!-- Datos cargados dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Comparativa mensual -->
+          <div id="rep-panel-comparativa-meses" class="p-5 rounded-2xl border border-slate-200 dark:border-[#233047] bg-white dark:bg-[#162032] flex flex-col gap-3">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-[#233047]">
+              <div class="flex items-center gap-2">
+                <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-600"></i>
+                <h4 class="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">Comparativa Mensual Histórica de Rendimiento</h4>
+              </div>
+              <span class="text-[10px] font-mono text-slate-400">Datos históricos consolidados</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/70 dark:bg-[#101726]/70">
+                <span class="text-[11px] font-bold text-slate-500 uppercase">Julio 2026</span>
+                <div class="text-base font-extrabold font-mono text-slate-700 dark:text-slate-300 mt-1">S/. 12,400.00</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">18 Órdenes • 24 Vehículos atendidos</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/70 dark:bg-[#101726]/70">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-slate-500 uppercase">Agosto 2026</span>
+                  <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.2 rounded">+35.8%</span>
+                </div>
+                <div class="text-base font-extrabold font-mono text-slate-700 dark:text-slate-300 mt-1">S/. 16,850.00</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">23 Órdenes • 28 Vehículos atendidos</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/20">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-extrabold text-blue-700 dark:text-blue-300 uppercase">Septiembre 2026 (Actual)</span>
+                  <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.2 rounded">+9.5%</span>
+                </div>
+                <div class="text-base font-extrabold font-mono text-blue-600 dark:text-blue-400 mt-1">S/. 18,450.00</div>
+                <div class="text-[10px] text-blue-600 dark:text-blue-400 mt-0.5 font-medium">27 Órdenes • Récord operativo histórico</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Vista: Usuarios y roles -->
+      <div id="view-usuarios" class="app-view hidden flex flex-col gap-6">
+        <div class="scandi-card p-6 flex flex-col gap-6">
+          <div class="flex flex-col gap-1 border-b border-slate-100 dark:border-[#233047] pb-4">
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Administración de Usuarios y Roles de Acceso</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Control de credenciales, niveles de autorización y permisos de personal.</p>
+          </div>
+
+          <!-- Barra de herramientas -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <span class="text-xs text-slate-500">Módulo exclusivo para Administradores del Sistema.</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="cargarUsuariosWeb()" class="btn-scandi btn-scandi-secondary text-xs px-3 py-2" title="Refrescar" aria-label="Refrescar lista">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              </button>
+              <button type="button" onclick="cambiarEstadoUsuarioSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span>Activar / Desactivar</span>
+              </button>
+              <button type="button" onclick="editarUsuarioSeleccionadoWeb()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                <span>Editar Usuario</span>
+              </button>
+              <button type="button" onclick="abrirModalUsuario(null)" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Nuevo Usuario</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabla de usuarios -->
+          <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-[#233047]">
+            <table class="w-full min-w-[720px] text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-[#233047] text-slate-500 dark:text-slate-400 font-semibold bg-slate-50 dark:bg-[#162032]">
+                  <th class="p-3 w-12 text-center">Sel</th>
+                  <th class="p-3">ID</th>
+                  <th class="p-3">Usuario</th>
+                  <th class="p-3">Rol Asignado</th>
+                  <th class="p-3">Nombres y Apellidos</th>
+                  <th class="p-3">Correo Electrónico</th>
+                  <th class="p-3">Teléfono</th>
+                  <th class="p-3">Estado</th>
+                </tr>
+              </thead>
+              <tbody id="usuarios-table-body" class="divide-y divide-slate-100 dark:divide-[#233047]">
+                <!-- Datos cargados dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Ventanas modales -->
+
+  <!-- Modal cliente -->
+  <div id="modal-cliente" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-lg p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <h3 id="modal-cliente-title" class="font-bold text-slate-900 dark:text-white text-base">Nuevo Cliente</h3>
+        <button type="button" onclick="cerrarModal('modal-cliente')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="form-cliente" onsubmit="guardarClienteWeb(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <input type="hidden" id="form-cliente-id">
+        <div class="flex flex-col gap-1">
+          <label for="form-cliente-tipo-doc" class="font-bold text-slate-700 dark:text-slate-300">Tipo Documento</label>
+          <select id="form-cliente-tipo-doc" onchange="onTipoDocChange('form-cliente-tipo-doc', 'form-cliente-num-doc')" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+            <option value="DNI">DNI (Persona Natural)</option>
+            <option value="RUC">RUC (Empresa)</option>
+            <option value="CE">Carnet de Extranjería</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-cliente-num-doc" class="font-bold text-slate-700 dark:text-slate-300">N° Documento</label>
+          <input type="text" id="form-cliente-num-doc" required placeholder="47891234" maxlength="8" inputmode="numeric" onkeydown="if(document.getElementById('form-cliente-tipo-doc')?.value !== 'CE') soloNumerosKeydown(event)" oninput="formatearDocInput(this, document.getElementById('form-cliente-tipo-doc')?.value)" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-mono">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1">
+          <label for="form-cliente-nombre" class="font-bold text-slate-700 dark:text-slate-300">Nombre / Razón Social</label>
+          <input type="text" id="form-cliente-nombre" required class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-cliente-tel" class="font-bold text-slate-700 dark:text-slate-300">Teléfono</label>
+          <input type="text" id="form-cliente-tel" placeholder="987654321" maxlength="9" inputmode="numeric" onkeydown="soloNumerosKeydown(event)" oninput="formatearTelefonoInput(this)" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-mono">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-cliente-correo" class="font-bold text-slate-700 dark:text-slate-300">Correo Electrónico</label>
+          <input type="email" id="form-cliente-correo" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1">
+          <label for="form-cliente-dir" class="font-bold text-slate-700 dark:text-slate-300">Dirección</label>
+          <input type="text" id="form-cliente-dir" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-cliente')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs">Guardar Cliente</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal vehículo -->
+  <div id="modal-vehiculo" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-3xl p-6 sm:p-8 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-6 shadow-2xl transition-all">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-[#233047]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="car" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 id="modal-vehiculo-title" class="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">Editar Vehículo</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gestión de ficha técnica del vehículo, kilometraje y asignación de titular</p>
+          </div>
+        </div>
+        <button type="button" onclick="cerrarModal('modal-vehiculo')" class="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#101726] transition-colors pointer" title="Cerrar">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-vehiculo" onsubmit="guardarVehiculoWeb(event)" class="flex flex-col gap-5">
+        <input type="hidden" id="form-vehiculo-id">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 text-xs sm:text-sm">
+          <!-- Placa -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="hash" class="w-3.5 h-3.5 text-blue-500"></i>
+              Placa del Vehículo
+            </label>
+            <input type="text" id="form-vehiculo-placa" required placeholder="ABC-123" maxlength="7" oninput="formatearPlacaInput(this, event)" class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white uppercase font-mono font-bold text-sm tracking-wider focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+          </div>
+
+          <!-- Propietario -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="user" class="w-3.5 h-3.5 text-blue-500"></i>
+              Propietario / Titular
+            </label>
+            <select id="form-vehiculo-cliente" required class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none w-full">
+              <!-- Opciones cargadas dinámicamente -->
+            </select>
+          </div>
+
+          <!-- Marca -->
+          <div class="flex flex-col gap-1.5">
+            <label for="form-vehiculo-marca" class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Marca Fabricante</label>
+            <input type="text" id="form-vehiculo-marca" required placeholder="Toyota" class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+          </div>
+
+          <!-- Modelo -->
+          <div class="flex flex-col gap-1.5">
+            <label for="form-vehiculo-modelo" class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Modelo / Versión</label>
+            <input type="text" id="form-vehiculo-modelo" required placeholder="Corolla 1.8 Dual VVT-i" class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+          </div>
+
+          <!-- Año -->
+          <div class="flex flex-col gap-1.5">
+            <label for="form-vehiculo-anio" class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Año de Fabricación</label>
+            <input type="number" id="form-vehiculo-anio" min="1980" max="2026" value="2022" class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white font-mono text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+          </div>
+
+          <!-- Color -->
+          <div class="flex flex-col gap-1.5">
+            <label for="form-vehiculo-color" class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Color de Carrocería</label>
+            <input type="text" id="form-vehiculo-color" placeholder="Gris Metálico" class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+          </div>
+
+          <!-- Kilometraje -->
+          <div class="flex flex-col gap-1.5">
+            <label for="form-vehiculo-km" class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Kilometraje Actual (km)</label>
+            <input type="number" id="form-vehiculo-km" min="0" value="45000" class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white font-mono text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none">
+          </div>
+
+          <!-- Numero de chasis -->
+          <div class="flex flex-col gap-1.5">
+            <label for="form-vehiculo-vin" class="font-bold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">N° VIN / Número de Chasis</label>
+            <input type="text" id="form-vehiculo-vin" placeholder="9BRBL48E0MB123456" class="p-3 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] text-slate-900 dark:text-white font-mono text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none uppercase">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-vehiculo')" class="btn-scandi btn-scandi-secondary px-5 py-2.5 text-xs sm:text-sm">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary px-6 py-2.5 text-xs sm:text-sm shadow-sm flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Guardar Vehículo</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal cobro en efectivo -->
+  <div id="modal-cobro" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-md p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <h3 id="modal-cobro-title" class="font-bold text-slate-900 dark:text-white text-base">Cobro en Efectivo y Emisión</h3>
+        <button type="button" onclick="cerrarModal('modal-cobro')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="form-cobro" onsubmit="confirmarCobroEfectivoWeb(event)" class="flex flex-col gap-3 text-xs">
+        <input type="hidden" id="form-cobro-id-orden">
+        <div class="flex flex-col gap-1">
+          <label for="form-cobro-orden-info" class="font-bold text-slate-500">Orden de Trabajo / Placa</label>
+          <input type="text" id="form-cobro-orden-info" readonly class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-100 dark:bg-[#101726] font-bold font-mono">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-cobro-cliente-info" class="font-bold text-slate-500">Cliente Titular</label>
+          <input type="text" id="form-cobro-cliente-info" readonly class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-100 dark:bg-[#101726] font-medium">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="flex flex-col gap-1">
+            <label for="form-cobro-tipo" class="font-bold text-slate-700 dark:text-slate-300">Tipo Comprobante</label>
+            <select id="form-cobro-tipo" onchange="actualizarSerieCobroWeb(this.value)" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-bold">
+              <option value="BOLETA">BOLETA</option>
+              <option value="FACTURA">FACTURA</option>
+              <option value="TICKET">TICKET</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="form-cobro-serie-num" class="font-bold text-slate-700 dark:text-slate-300">Serie & Correlativo</label>
+            <input type="text" id="form-cobro-serie-num" readonly class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-100 dark:bg-[#101726] font-mono font-bold text-blue-600">
+          </div>
+        </div>
+        <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 flex flex-col gap-1">
+          <div class="flex justify-between text-slate-500">
+            <span>Subtotal Neto:</span>
+            <span id="form-cobro-subtotal" class="font-mono">S/. 0.00</span>
+          </div>
+          <div class="flex justify-between text-slate-500">
+            <span>IGV (18%):</span>
+            <span id="form-cobro-igv" class="font-mono">S/. 0.00</span>
+          </div>
+          <div class="flex justify-between text-base font-extrabold text-slate-900 dark:text-white pt-1 border-t border-blue-200 dark:border-blue-900/60">
+            <span>Total a Cobrar:</span>
+            <span id="form-cobro-total" class="font-mono text-emerald-600 dark:text-emerald-400">S/. 0.00</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-cobro-metodo" class="font-bold text-slate-700 dark:text-slate-300">Método de Pago</label>
+          <select id="form-cobro-metodo" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-medium text-slate-800 dark:text-slate-200">
+            <option value="EFECTIVO" selected>Efectivo en Caja</option>
+            <option value="YAPE / PLIN">Billetera Digital (Yape / Plin)</option>
+            <option value="TARJETA">Tarjeta de Débito / Crédito (POS)</option>
+            <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-cobro')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs">Confirmar y Cobrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal cambiar estado de orden -->
+  <div id="modal-cambiar-estado" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-sm p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <h3 class="font-bold text-slate-900 dark:text-white text-base">Cambiar Estado de Orden</h3>
+        <button type="button" onclick="cerrarModal('modal-cambiar-estado')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="form-cambiar-estado" onsubmit="guardarCambioEstadoWeb(event)" class="flex flex-col gap-3 text-xs">
+        <input type="hidden" id="form-estado-id-orden">
+        <div>
+          <label class="font-bold text-slate-500">Orden Seleccionada</label>
+          <div id="form-estado-codigo-info" class="font-bold font-mono text-sm text-blue-600 mt-1">OT-2024-XXXX</div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-estado-nuevo" class="font-bold text-slate-700 dark:text-slate-300">Nuevo Estado Operativo</label>
+          <select id="form-estado-nuevo" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-bold">
+            <option value="REGISTRADO">REGISTRADO</option>
+            <option value="EN_DIAGNOSTICO">EN_DIAGNOSTICO</option>
+            <option value="EN_REPARACION">EN_REPARACION</option>
+            <option value="EN_PRUEBAS">EN_PRUEBAS</option>
+            <option value="LISTO">LISTO</option>
+            <option value="ENTREGADO">ENTREGADO</option>
+            <option value="CANCELADO">CANCELADO</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-estado-mecanico" class="font-bold text-slate-700 dark:text-slate-300">Técnico Mecánico Responsable</label>
+          <select id="form-estado-mecanico" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-bold">
+            <!-- Cargado dinámicamente -->
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-cambiar-estado')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs">Actualizar Estado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal detalle de orden -->
+  <div id="modal-detalle-orden" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-2xl p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <div class="flex items-center gap-2">
+          <h3 id="modal-detalle-codigo" class="font-extrabold text-blue-600 dark:text-blue-400 text-lg font-mono">OT-2024-XXXX</h3>
+          <span id="modal-detalle-estado" class="badge-status badge-cobalt">EN_PROCESO</span>
+        </div>
+        <button type="button" onclick="cerrarModal('modal-detalle-orden')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div id="modal-detalle-content" class="flex flex-col gap-4 text-xs">
+        <!-- Contenido dinámico -->
+      </div>
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-[#233047]">
+        <button type="button" onclick="cerrarModal('modal-detalle-orden')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal nuevo repuesto -->
+  <div id="modal-repuesto" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-lg p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <h3 id="modal-repuesto-title" class="font-bold text-slate-900 dark:text-white text-base">Nuevo Repuesto</h3>
+        <button type="button" onclick="cerrarModal('modal-repuesto')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="form-repuesto" onsubmit="guardarRepuestoWeb(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <input type="hidden" id="form-rep-id">
+        <div class="flex flex-col gap-1">
+          <label for="form-rep-codigo" class="font-bold text-slate-700 dark:text-slate-300">Código SKU</label>
+          <input type="text" id="form-rep-codigo" required placeholder="REP-026" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-mono font-bold">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-rep-marca" class="font-bold text-slate-700 dark:text-slate-300">Marca</label>
+          <input type="text" id="form-rep-marca" required placeholder="Brembo / Bosch" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1">
+          <label for="form-rep-nombre" class="font-bold text-slate-700 dark:text-slate-300">Nombre del Repuesto</label>
+          <input type="text" id="form-rep-nombre" required placeholder="Pastillas de Freno Cerámicas" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-rep-pcompra" class="font-bold text-slate-700 dark:text-slate-300">Precio Compra (S/.)</label>
+          <input type="number" step="0.01" id="form-rep-pcompra" required value="120.00" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-rep-pventa" class="font-bold text-slate-700 dark:text-slate-300">Precio Venta (S/.)</label>
+          <input type="number" step="0.01" id="form-rep-pventa" required value="180.00" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-rep-stock" class="font-bold text-slate-700 dark:text-slate-300">Stock Inicial</label>
+          <input type="number" id="form-rep-stock" required value="10" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-rep-min" class="font-bold text-slate-700 dark:text-slate-300">Stock Mínimo</label>
+          <input type="number" id="form-rep-min" required value="4" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1">
+          <label for="form-rep-ubicacion" class="font-bold text-slate-700 dark:text-slate-300">Ubicación en Almacén</label>
+          <input type="text" id="form-rep-ubicacion" placeholder="Estante A-02 / Nivel 1" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-repuesto')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs">Guardar Repuesto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal ajustar stock -->
+  <div id="modal-ajuste-stock" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-sm p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <h3 id="modal-ajuste-title" class="font-bold text-slate-900 dark:text-white text-base">Ajustar Stock Físico</h3>
+        <button type="button" onclick="cerrarModal('modal-ajuste-stock')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="form-ajuste-stock" onsubmit="guardarAjusteStockWeb(event)" class="flex flex-col gap-3 text-xs">
+        <input type="hidden" id="form-ajuste-id-rep">
+        <div>
+          <label class="font-bold text-slate-500">Repuesto Seleccionado</label>
+          <div id="form-ajuste-nombre" class="font-bold text-sm text-blue-600 mt-0.5">Pastillas Brembo</div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-ajuste-cantidad" class="font-bold text-slate-700 dark:text-slate-300">Nuevo Stock en Almacén</label>
+          <input type="number" id="form-ajuste-cantidad" min="0" required class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-mono font-bold text-base">
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-ajuste-stock')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs">Actualizar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal nuevo servicio -->
+  <div id="modal-servicio" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-md p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <h3 id="modal-servicio-title" class="font-bold text-slate-900 dark:text-white text-base">Nuevo Servicio (Mano de Obra)</h3>
+        <button type="button" onclick="cerrarModal('modal-servicio')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="form-servicio" onsubmit="guardarServicioWeb(event)" class="flex flex-col gap-3 text-xs">
+        <input type="hidden" id="form-srv-id">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="flex flex-col gap-1">
+            <label for="form-srv-codigo" class="font-bold text-slate-700 dark:text-slate-300">Código</label>
+            <input type="text" id="form-srv-codigo" required placeholder="SRV-CUSTOM-01" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-mono font-bold">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="form-srv-precio" class="font-bold text-slate-700 dark:text-slate-300">Precio Base (S/.)</label>
+            <input type="number" step="0.01" id="form-srv-precio" required value="100.00" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-srv-nombre" class="font-bold text-slate-700 dark:text-slate-300">Nombre del Servicio</label>
+          <input type="text" id="form-srv-nombre" required placeholder="Calibración de Sensores ADAS" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div class="flex flex-col gap-1">
+            <label for="form-srv-tiempo" class="font-bold text-slate-700 dark:text-slate-300">Tiempo Estimado (min)</label>
+            <input type="number" id="form-srv-tiempo" value="60" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="form-srv-tipo" class="font-bold text-slate-700 dark:text-slate-300">Tipo / Familia</label>
+            <input type="text" id="form-srv-tipo" placeholder="Diagnóstico" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-srv-desc" class="font-bold text-slate-700 dark:text-slate-300">Descripción del Trabajo</label>
+          <textarea id="form-srv-desc" rows="2" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-servicio')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs">Guardar Servicio</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal nuevo usuario -->
+  <div id="modal-usuario" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-md p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <h3 id="modal-usuario-title" class="font-bold text-slate-900 dark:text-white text-base">Nuevo Usuario del Sistema</h3>
+        <button type="button" onclick="cerrarModal('modal-usuario')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <form id="form-usuario" onsubmit="guardarUsuarioWeb(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <input type="hidden" id="form-user-id">
+        <div class="flex flex-col gap-1">
+          <label for="form-user-login" class="font-bold text-slate-700 dark:text-slate-300">Usuario (Login)</label>
+          <input type="text" id="form-user-login" required placeholder="nombre.apellido" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-mono">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-user-pass" class="font-bold text-slate-700 dark:text-slate-300">Contraseña</label>
+          <input type="password" id="form-user-pass" required placeholder="••••••••" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1">
+          <label for="form-user-rol" class="font-bold text-slate-700 dark:text-slate-300">Rol de Acceso</label>
+          <select id="form-user-rol" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726] font-bold">
+            <option value="ADMIN">ADMIN (Acceso Total y Configuración)</option>
+            <option value="RECEPCION">RECEPCION (Clientes, Vehículos, OTs)</option>
+            <option value="CAJA">CAJA (Caja y Facturación)</option>
+            <option value="MECANICO">MECANICO (Bahías, OTs)</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-user-nombres" class="font-bold text-slate-700 dark:text-slate-300">Nombres</label>
+          <input type="text" id="form-user-nombres" required class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-user-apellidos" class="font-bold text-slate-700 dark:text-slate-300">Apellidos</label>
+          <input type="text" id="form-user-apellidos" required class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-user-correo" class="font-bold text-slate-700 dark:text-slate-300">Correo Electrónico</label>
+          <input type="email" id="form-user-correo" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="form-user-tel" class="font-bold text-slate-700 dark:text-slate-300">Teléfono</label>
+          <input type="text" id="form-user-tel" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-slate-50 dark:bg-[#101726]">
+        </div>
+        <div class="col-span-1 sm:col-span-2 flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="cerrarModal('modal-usuario')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar modal">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs">Guardar Usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Historial Técnico Vehicular -->
+  <div id="modal-historial-vehiculo" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-4xl p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <i data-lucide="history" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base">Historial Clínico y Ficha Técnica del Vehículo</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">Trazabilidad completa de mantenimientos, diagnósticos y repuestos instalados.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="imprimirHistorialVehiculoActualPDF()" class="btn-scandi btn-scandi-secondary text-xs flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Exportar PDF</span>
+          </button>
+          <button type="button" onclick="cerrarModal('modal-historial-vehiculo')" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar modal"><i data-lucide="x" class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <div id="modal-historial-vehiculo-content" class="flex flex-col gap-4 text-xs">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal vista previa de impresión -->
+  <div id="modal-pdf-viewer" class="modal-fondo hidden">
+    <div class="bg-white text-slate-900 rounded-[4px] w-full max-w-4xl p-4 sm:p-8 my-auto flex flex-col gap-6 shadow-2xl max-h-[92vh] overflow-y-auto print:p-0 print:shadow-none border border-slate-200">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 print:hidden">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <span class="font-extrabold text-slate-900 text-sm block">Documento Oficial MecaPro S.A.C.</span>
+            <span class="text-[11px] text-slate-500 font-mono">Vista previa de impresión y exportación PDF</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="ejecutarImpresionLimpiaPDF()" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>Imprimir / Guardar PDF</span>
+          </button>
+          <button type="button" onclick="cerrarModal('modal-pdf-viewer')" class="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors pointer" title="Cerrar" aria-label="Cerrar visor PDF"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+      </div>
+      <!-- Contenido para imprimir -->
+      <div id="printable-pdf-content" class="flex flex-col gap-6 text-xs bg-white text-slate-900">
+        <!-- Contenido dinámico -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal confirmar cerrar sesión -->
+  <div id="modal-logout-confirm" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-sm p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl text-center relative">
+      <button type="button" onclick="cerrarModal('modal-logout-confirm')" class="absolute top-3 right-3 p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 pointer" aria-label="Cerrar confirmación"><i data-lucide="x" class="w-4 h-4"></i></button>
+      <div class="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center mx-auto">
+        <i data-lucide="log-out" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-bold text-slate-900 dark:text-white text-base">¿Desea cerrar la sesión actual?</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400">Podrá volver a ingresar en cualquier momento seleccionando su rol en la pantalla de acceso.</p>
+      <div class="flex justify-center gap-2 pt-2">
+        <button type="button" onclick="cerrarModal('modal-logout-confirm')" class="btn-scandi btn-scandi-secondary text-xs" aria-label="Cerrar confirmación">Cancelar</button>
+        <button type="button" onclick="ejecutarCerrarSesion()" class="btn-scandi btn-scandi-primary text-xs bg-rose-600 hover:bg-rose-700 border-rose-600">Sí, Salir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal cambiar usuario -->
+  <div id="login-modal" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-md p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 p-1 flex items-center justify-center">
+            <img src="assets/logo_white.png" alt="Logo" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm">Cambiar Usuario / Rol</h3>
+            <p class="text-[11px] text-slate-400">Seleccione el perfil de usuario para iniciar sesión:</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeLoginModal()" class="p-1 rounded-lg text-slate-400 hover:text-slate-600" aria-label="Cerrar ventana de autenticación"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div id="login-profiles-list" class="flex flex-col gap-2 max-h-80 overflow-y-auto pr-1">
+        <!-- Lista de perfiles -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Buscador rápido -->
+  <div id="modal-busqueda-rapida" class="modal-fondo hidden" onclick="if(event.target===this) toggleBuscadorRapido()">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-xl p-3 sm:p-4 my-auto max-h-[92vh] overflow-y-auto shadow-2xl flex flex-col gap-3">
+      <div class="flex items-center gap-2.5 px-3 py-2 bg-slate-50 dark:bg-[#101726] rounded-xl border border-slate-200 dark:border-[#2a3b56]">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
+        <input type="text" id="input-busqueda-rapida" oninput="buscarEnSistemaRapido(this.value)" placeholder="Escriba placa, cliente, repuesto u orden..." class="bg-transparent border-0 text-slate-900 dark:text-white text-xs w-full focus:outline-none" aria-label="Búsqueda rápida en el sistema">
+        <kbd class="px-1.5 py-0.5 rounded bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] text-[10px] font-mono text-slate-400">ESC</kbd>
+      </div>
+      <div id="resultados-busqueda-rapida" class="flex flex-col gap-1 max-h-64 overflow-y-auto text-xs">
+        <span class="text-slate-400 text-center py-4">Comience a escribir para buscar en tiempo real...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal nueva orden de trabajo -->
+  <div id="new-order-modal" class="modal-fondo hidden">
+    <div class="bg-white dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] rounded-2xl w-full max-w-2xl p-4 sm:p-6 my-auto max-h-[92vh] overflow-y-auto flex flex-col gap-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#233047]">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center">
+            <i data-lucide="file-plus" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base">Registrar Nueva Orden de Trabajo</h3>
+            <p class="text-[11px] text-slate-400">Admisión vehicular, registro de cliente e inspección técnica de ingreso</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeNewOrderModal()" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors pointer" aria-label="Cerrar modal nueva orden"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <form id="form-new-order" onsubmit="handleCreateOrder(event)" class="flex flex-col gap-3.5 text-xs">
+        
+        <!-- Datos del cliente -->
+        <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/50 dark:bg-[#101726]/40 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+              Datos Completos del Cliente
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div class="flex flex-col gap-1">
+              <label for="new-order-cliente-tipo" class="font-bold text-slate-700 dark:text-slate-300">Tipo Documento</label>
+              <select id="new-order-cliente-tipo" onchange="onTipoDocChange('new-order-cliente-tipo', 'new-order-cliente-num-doc')" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white font-medium">
+                <option value="DNI">DNI (Persona Natural)</option>
+                <option value="RUC">RUC (Empresa)</option>
+                <option value="CE">Carnet de Extranjería</option>
+              </select>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="new-order-cliente-num-doc" class="font-bold text-slate-700 dark:text-slate-300">N° Documento</label>
+              <input type="text" id="new-order-cliente-num-doc" required placeholder="47891234" maxlength="8" inputmode="numeric" onkeydown="if(document.getElementById('new-order-cliente-tipo')?.value !== 'CE') soloNumerosKeydown(event)" oninput="onNuevaOrdenClienteDocInput(this, event)" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] font-mono font-bold text-slate-900 dark:text-white">
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="new-order-cliente-tel" class="font-bold text-slate-700 dark:text-slate-300">Teléfono / Celular</label>
+              <input type="text" id="new-order-cliente-tel" required placeholder="987654321" maxlength="9" inputmode="numeric" onkeydown="soloNumerosKeydown(event)" oninput="formatearTelefonoInput(this)" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] font-mono text-slate-900 dark:text-white">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="flex flex-col gap-1">
+              <label for="new-order-cliente" class="font-bold text-slate-700 dark:text-slate-300">Nombre / Razón Social</label>
+              <input type="text" id="new-order-cliente" required placeholder="Minera San José / Juan Pérez" list="list-clientes-sugeridos" oninput="onNuevaOrdenClienteNombreInput(this.value)" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white font-medium">
+              <datalist id="list-clientes-sugeridos"></datalist>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="new-order-cliente-correo" class="font-bold text-slate-700 dark:text-slate-300">Correo Electrónico</label>
+              <input type="email" id="new-order-cliente-correo" placeholder="cliente@empresa.com" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white">
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label for="new-order-cliente-dir" class="font-bold text-slate-700 dark:text-slate-300">Dirección Fiscal / Domicilio</label>
+            <input type="text" id="new-order-cliente-dir" placeholder="Av. Javier Prado Este 2450, San Borja" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white">
+          </div>
+        </div>
+
+        <!-- Datos del vehículo -->
+        <div class="p-3.5 rounded-xl border border-slate-200 dark:border-[#2a3b56] bg-slate-50/50 dark:bg-[#101726]/40 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i data-lucide="car" class="w-3.5 h-3.5"></i>
+              Datos del Vehículo
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+            <div class="flex flex-col gap-1">
+              <label for="new-order-placa" class="font-bold text-slate-700 dark:text-slate-300">Placa</label>
+              <input type="text" id="new-order-placa" required placeholder="B3X-892" maxlength="7" oninput="onNuevaOrdenPlacaInput(this, event)" list="list-placas-sugeridas" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] uppercase font-mono font-bold text-slate-900 dark:text-white tracking-wider">
+              <datalist id="list-placas-sugeridas"></datalist>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="new-order-vehiculo-marca" class="font-bold text-slate-700 dark:text-slate-300">Marca</label>
+              <input type="text" id="new-order-vehiculo-marca" required placeholder="Toyota" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white font-medium">
+            </div>
+            <div class="flex flex-col gap-1 sm:col-span-2">
+              <label for="new-order-vehiculo" class="font-bold text-slate-700 dark:text-slate-300">Modelo / Versión</label>
+              <input type="text" id="new-order-vehiculo" required placeholder="Hilux 4x4 D-4D (2022)" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white font-medium">
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio solicitado y asignación -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div class="col-span-1 sm:col-span-3 flex flex-col gap-1">
+            <label for="new-order-servicio" class="font-bold text-slate-700 dark:text-slate-300">Motivo de Ingreso / Servicio Solicitado</label>
+            <input type="text" id="new-order-servicio" required placeholder="Mantenimiento Periódico & Revisión de Frenos" list="list-servicios-sugeridos" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white">
+            <datalist id="list-servicios-sugeridos"></datalist>
+          </div>
+          <div class="flex flex-col gap-1 sm:col-span-2">
+            <label for="new-order-mecanico" class="font-bold text-slate-700 dark:text-slate-300">Mecánico Asignado</label>
+            <select id="new-order-mecanico" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white font-medium">
+              <!-- Opciones cargadas dinámicamente -->
+            </select>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="new-order-total" class="font-bold text-slate-700 dark:text-slate-300">Total Estimado (S/.)</label>
+            <input type="number" id="new-order-total" required value="450.00" step="0.01" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] font-mono text-slate-900 dark:text-white font-bold">
+          </div>
+        </div>
+
+        <!-- Peritaje inicial -->
+        <div class="p-3.5 rounded-xl border border-dashed border-slate-200 dark:border-[#2a3b56] bg-slate-50/60 dark:bg-[#101726]/60 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-extrabold text-blue-600 dark:text-blue-400 flex items-center gap-1.5 uppercase tracking-wider">
+              <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+              Peritaje Inicial de Ingreso
+            </span>
+            <span class="text-[10px] text-slate-400">Recepción del Vehículo</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="flex flex-col gap-1">
+              <label for="new-order-km" class="font-bold text-slate-700 dark:text-slate-300">Km al Ingresar</label>
+              <input type="number" id="new-order-km" placeholder="78420" value="78420" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] font-mono font-bold text-slate-900 dark:text-white text-xs">
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="new-order-gas" class="font-bold text-slate-700 dark:text-slate-300">Nivel de Gasolina</label>
+              <select id="new-order-gas" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white text-xs font-medium">
+                <option value="Reserva">Reserva (E)</option>
+                <option value="1/4 Tanque">1/4 Tanque</option>
+                <option value="1/2 Tanque" selected>1/2 Tanque</option>
+                <option value="3/4 Tanque">3/4 Tanque</option>
+                <option value="Tanque Lleno">Tanque Lleno (F)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label for="new-order-danos" class="font-bold text-slate-700 dark:text-slate-300">Inspección de Daños Previos (Rayones, Lunas, Herramientas)</label>
+            <input type="text" id="new-order-danos" placeholder="Ej. Rayón en puerta derecha, lunas conformes, gata completa..." value="" class="p-2 rounded-lg border border-slate-200 dark:border-[#2a3b56] bg-white dark:bg-[#162032] text-slate-900 dark:text-white text-xs">
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-[#233047]">
+          <button type="button" onclick="closeNewOrderModal()" class="btn-scandi btn-scandi-secondary text-xs pointer" aria-label="Cerrar modal nueva orden">Cancelar</button>
+          <button type="submit" class="btn-scandi btn-scandi-primary text-xs flex items-center gap-1.5 pointer shadow-sm">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span>Ingresar Orden y Registrar</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Contenedor de notificaciones -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-[100000] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Scripts del sistema -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/data.js?v=1.4"></script>
+  <script src="js/app.js?v=1.4"></script>
+</body>
+</html>

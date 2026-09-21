@@ -1,0 +1,239 @@
+@startuml DiagramaEntidadRelacionPostgreSQL
+' Configuración Visual Formal PlantUML ERD (Cabeceras Blancas Clásicas)
+!define Table(name,desc) class name as "desc" << (T,#E2E8F0) >>
+hide methods
+hide stereotypes
+skinparam linetype ortho
+skinparam roundCorner 5
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+
+' Estilo con Cabeceras Blancas y Texto Oscuro Legible
+skinparam class {
+    BackgroundColor White
+    HeaderBackgroundColor White
+    ArrowColor #334155
+    BorderColor #334155
+    FontColor #0F172A
+    FontSize 11
+    FontStyle bold
+}
+
+' =============================================================
+' 1. SEDES, SEGURIDAD, ACCESO Y AUDITORÍA
+' =============================================================
+entity "sedes" as sedes {
+    * id_sede : INTEGER <<PK, GENERATED>>
+    --
+    * nombre : VARCHAR(100)
+    direccion : TEXT
+    telefono : VARCHAR(20)
+    * activo : BOOLEAN
+}
+
+entity "roles" as roles {
+    * id_rol : INTEGER <<PK, GENERATED>>
+    --
+    * nombre : VARCHAR(50) <<UNIQUE>>
+    descripcion : TEXT
+    * activo : BOOLEAN
+}
+
+entity "usuarios" as usuarios {
+    * id_usuario : INTEGER <<PK, GENERATED>>
+    --
+    * id_rol : INTEGER <<FK>>
+    * dni : VARCHAR(8) <<UNIQUE>>
+    * nombres : VARCHAR(100)
+    * username : VARCHAR(50) <<UNIQUE>>
+    * password_hash : VARCHAR(255)
+    * estado : VARCHAR(20)
+    fecha_creacion : TIMESTAMP
+}
+
+entity "auditoria_logs" as auditoria_logs {
+    * id_log : BIGINT <<PK, GENERATED>>
+    --
+    id_usuario : INTEGER <<FK>>
+    * accion : VARCHAR(100)
+    * tabla_afectada : VARCHAR(50)
+    registro_id : INTEGER
+    * fecha_evento : TIMESTAMP
+    ip_origen : VARCHAR(45)
+    detalles : TEXT
+}
+
+' =============================================================
+' 2. CLIENTES, VEHÍCULOS E HISTORIAL
+' =============================================================
+entity "clientes" as clientes {
+    * id_cliente : INTEGER <<PK, GENERATED>>
+    --
+    * tipo_doc : VARCHAR(10)
+    * num_doc : VARCHAR(15) <<UNIQUE>>
+    * nombre_razon : VARCHAR(150)
+    telefono : VARCHAR(20)
+    correo : VARCHAR(100)
+    direccion : TEXT
+    * fecha_registro : DATE
+}
+
+entity "vehiculos" as vehiculos {
+    * id_vehiculo : INTEGER <<PK, GENERATED>>
+    --
+    * id_cliente : INTEGER <<FK>>
+    * placa : VARCHAR(10) <<UNIQUE>>
+    * marca : VARCHAR(50)
+    * modelo : VARCHAR(50)
+    anio : INTEGER
+    color : VARCHAR(30)
+    vin_chasis : VARCHAR(50)
+    * kilometraje : INTEGER
+}
+
+entity "historial_vehiculo" as historial_vehiculo {
+    * id_historial : INTEGER <<PK, GENERATED>>
+    --
+    * id_vehiculo : INTEGER <<FK>>
+    id_orden : INTEGER <<FK>>
+    * fecha_evento : DATE
+    * kilometraje_reg : INTEGER
+    observaciones : TEXT
+}
+
+' =============================================================
+' 3. ÓRDENES DE TRABAJO, DETALLES Y COTIZACIONES (CORE)
+' =============================================================
+entity "ordenes_trabajo" as ordenes_trabajo {
+    * id_orden : INTEGER <<PK, GENERATED>>
+    --
+    * codigo_ot : VARCHAR(20) <<UNIQUE>>
+    * id_vehiculo : INTEGER <<FK>>
+    id_mecanico : INTEGER <<FK>>
+    * id_recepcionista : INTEGER <<FK>>
+    * estado : VARCHAR(25)
+    * falla_declarada : TEXT
+    diagnostico_tecnico : TEXT
+    * total_estimado : NUMERIC(10,2)
+    * fecha_ingreso : TIMESTAMP
+    fecha_salida : TIMESTAMP
+}
+
+entity "detalles_orden" as detalles_orden {
+    * id_detalle : INTEGER <<PK, GENERATED>>
+    --
+    * id_orden : INTEGER <<FK>>
+    id_servicio : INTEGER <<FK>>
+    id_repuesto : INTEGER <<FK>>
+    * tipo_item : VARCHAR(15)
+    * cantidad : NUMERIC(8,2)
+    * precio_unitario : NUMERIC(10,2)
+    * subtotal : NUMERIC(10,2)
+}
+
+entity "cotizaciones" as cotizaciones {
+    * id_cotizacion : INTEGER <<PK, GENERATED>>
+    --
+    * id_orden : INTEGER <<FK>>
+    * monto_total : NUMERIC(10,2)
+    * validez_dias : INTEGER
+    * estado_aprobacion : VARCHAR(20)
+    fecha_emision : TIMESTAMP
+}
+
+' =============================================================
+' 4. INVENTARIO Y CATÁLOGOS
+' =============================================================
+entity "categorias_repuesto" as categorias_repuesto {
+    * id_categoria : INTEGER <<PK, GENERATED>>
+    --
+    * nombre_categoria : VARCHAR(100) <<UNIQUE>>
+    descripcion : TEXT
+}
+
+entity "repuestos" as repuestos {
+    * id_repuesto : INTEGER <<PK, GENERATED>>
+    --
+    * id_categoria : INTEGER <<FK>>
+    * codigo_sku : VARCHAR(30) <<UNIQUE>>
+    * descripcion : VARCHAR(150)
+    * precio_compra : NUMERIC(10,2)
+    * precio_venta : NUMERIC(10,2)
+    * stock_actual : INTEGER
+    * stock_minimo : INTEGER
+    ubicacion_taller : VARCHAR(50)
+}
+
+entity "servicios_taller" as servicios_taller {
+    * id_servicio : INTEGER <<PK, GENERATED>>
+    --
+    * codigo_servicio : VARCHAR(20) <<UNIQUE>>
+    * nombre_servicio : VARCHAR(100)
+    * precio_estandar : NUMERIC(10,2)
+    * tiempo_estimado_min : INTEGER
+    * activo : BOOLEAN
+}
+
+' =============================================================
+' 5. FACTURACIÓN Y CONTROL DE CAJA
+' =============================================================
+entity "facturas_boletas" as facturas_boletas {
+    * id_factura : INTEGER <<PK, GENERATED>>
+    --
+    * id_orden : INTEGER <<FK>>
+    * id_caja : INTEGER <<FK>>
+    * tipo_comprobante : VARCHAR(20)
+    * serie_correlativo : VARCHAR(20) <<UNIQUE>>
+    * fecha_emision : TIMESTAMP
+    * subtotal : NUMERIC(10,2)
+    * igv_18 : NUMERIC(10,2)
+    * total_neto : NUMERIC(10,2)
+    * metodo_pago : VARCHAR(30)
+}
+
+entity "movimientos_caja" as movimientos_caja {
+    * id_caja : INTEGER <<PK, GENERATED>>
+    --
+    * id_usuario : INTEGER <<FK>>
+    * fecha_apertura : TIMESTAMP
+    * monto_inicial : NUMERIC(10,2)
+    ingresos_efectivo : NUMERIC(10,2)
+    ingresos_digitales : NUMERIC(10,2)
+    monto_cierre : NUMERIC(10,2)
+    * estado_caja : VARCHAR(20)
+}
+
+' =============================================================
+' RELACIONES (CROW'S FOOT NOTATION)
+' =============================================================
+
+' Seguridad
+roles ||--o{ usuarios : "asigna a"
+usuarios ||--o{ auditoria_logs : "genera"
+
+' Clientes y Vehículos
+clientes ||--o{ vehiculos : "posee"
+vehiculos ||--o{ historial_vehiculo : "registra"
+vehiculos ||--o{ ordenes_trabajo : "ingresa a"
+
+' Órdenes y Usuarios
+usuarios ||--o{ ordenes_trabajo : "atiende como mecánico"
+usuarios ||--o{ ordenes_trabajo : "recepciona"
+
+' Órdenes y Detalles
+ordenes_trabajo ||--o{ detalles_orden : "contiene"
+ordenes_trabajo ||--o{ cotizaciones : "genera"
+ordenes_trabajo ||--o{ historial_vehiculo : "vincula"
+
+' Repuestos y Categorías
+categorias_repuesto ||--o{ repuestos : "clasifica"
+repuestos ||--o{ detalles_orden : "se consume en"
+servicios_taller ||--o{ detalles_orden : "se aplica en"
+
+' Facturación y Caja
+ordenes_trabajo ||--o| facturas_boletas : "se factura en"
+movimientos_caja ||--o{ facturas_boletas : "recauda"
+usuarios ||--o{ movimientos_caja : "apertura/cierra"
+
+@enduml

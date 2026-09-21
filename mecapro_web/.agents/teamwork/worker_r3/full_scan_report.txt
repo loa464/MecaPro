@@ -1,0 +1,164 @@
+Total forbidden term matches: 154
+Total emoji matches: 4
+
+=== FORBIDDEN TERMS ===
+[index.html:89] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox()" class="hidden md:flex items-center relative w-64 lg:w-80 bg-slate-50 dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] hover:border-blue-500 dark:hover:border-blue-400 rounded-lg px-3 py-1.5 pointer transition-colors group">
+[index.html:99] Term: 'omnibox' (Found: 'Omnibox') -> <button type="button" onclick="toggleOmnibox()" class="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] pointer transition-colors" title="Buscar (Ctrl+K)" aria-label="Buscar en el sistema">
+[index.html:1479] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-cliente" class="omnibox-backdrop hidden">
+[index.html:1524] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-vehiculo" class="omnibox-backdrop hidden">
+[index.html:1614] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-cobro" class="omnibox-backdrop hidden">
+[index.html:1671] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-cambiar-estado" class="omnibox-backdrop hidden">
+[index.html:1704] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-detalle-orden" class="omnibox-backdrop hidden">
+[index.html:1723] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-repuesto" class="omnibox-backdrop hidden">
+[index.html:1771] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-ajuste-stock" class="omnibox-backdrop hidden">
+[index.html:1796] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-servicio" class="omnibox-backdrop hidden">
+[index.html:1840] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-usuario" class="omnibox-backdrop hidden">
+[index.html:1889] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-pdf-viewer" class="omnibox-backdrop hidden">
+[index.html:1917] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-logout-confirm" class="omnibox-backdrop hidden">
+[index.html:1933] Term: 'omnibox' (Found: 'omnibox') -> <div id="login-modal" class="omnibox-backdrop hidden">
+[index.html:1954] Term: 'omnibox' (Found: 'omnibox') -> <div id="omnibox-backdrop" class="omnibox-backdrop hidden" onclick="if(event.target===this) toggleOmnibox()">
+[index.html:1954] Term: 'omnibox' (Found: 'omnibox') -> <div id="omnibox-backdrop" class="omnibox-backdrop hidden" onclick="if(event.target===this) toggleOmnibox()">
+[index.html:1954] Term: 'omnibox' (Found: 'Omnibox') -> <div id="omnibox-backdrop" class="omnibox-backdrop hidden" onclick="if(event.target===this) toggleOmnibox()">
+[index.html:1958] Term: 'omnibox' (Found: 'omnibox') -> <input type="text" id="omnibox-input" oninput="handleOmniboxSearch(this.value)" placeholder="Escriba placa, cliente, repuesto u orden..." class="bg-transparent border-0 text-slate-900 dark:text-white text-xs w-full focus:outline-none" aria-label="Búsqueda rápida en el sistema">
+[index.html:1958] Term: 'omnibox' (Found: 'Omnibox') -> <input type="text" id="omnibox-input" oninput="handleOmniboxSearch(this.value)" placeholder="Escriba placa, cliente, repuesto u orden..." class="bg-transparent border-0 text-slate-900 dark:text-white text-xs w-full focus:outline-none" aria-label="Búsqueda rápida en el sistema">
+[index.html:1961] Term: 'omnibox' (Found: 'omnibox') -> <div id="omnibox-results" class="flex flex-col gap-1 max-h-64 overflow-y-auto text-xs">
+[index.html:1968] Term: 'omnibox' (Found: 'omnibox') -> <div id="new-order-modal" class="omnibox-backdrop hidden">
+[styles.css:128] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div,
+[styles.css:373] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[styles.css:386] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[styles.css:393] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div {
+[styles.css:399] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.hidden {
+[styles.css:403] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.open {
+[styles.css:743] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop:not(#modal-pdf-viewer),
+[css\styles.css:128] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div,
+[css\styles.css:373] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[css\styles.css:386] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[css\styles.css:393] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div {
+[css\styles.css:399] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.hidden {
+[css\styles.css:403] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.open {
+[css\styles.css:743] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop:not(#modal-pdf-viewer),
+[js\app.js:314] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:338] Term: 'haptic' (Found: 'Haptic') -> function playHapticFeedback(type = 'click') {
+[js\app.js:347] Term: 'haptic' (Found: 'Haptic') -> if (state.audioEnabled) playHapticFeedback('toggle');
+[js\app.js:438] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('toggle');
+[js\app.js:500] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:585] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:935] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:1153] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:1549] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:1633] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:1752] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:1789] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:2031] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[js\app.js:2263] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:2293] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[js\app.js:2352] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:2468] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:2479] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:2631] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[js\app.js:2657] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:2684] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3140] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3243] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3296] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3365] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3727] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[js\app.js:3758] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3769] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3810] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[js\app.js:3816] Term: 'omnibox' (Found: 'Omnibox') -> function toggleOmnibox() {
+[js\app.js:3817] Term: 'omnibox' (Found: 'omnibox') -> const modal = document.getElementById('omnibox-backdrop');
+[js\app.js:3818] Term: 'omnibox' (Found: 'omnibox') -> const input = document.getElementById('omnibox-input');
+[js\app.js:3822] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3828] Term: 'omnibox' (Found: 'Omnibox') -> handleOmniboxSearch('');
+[js\app.js:3834] Term: 'omnibox' (Found: 'Omnibox') -> function handleOmniboxSearch(query) {
+[js\app.js:3835] Term: 'omnibox' (Found: 'omnibox') -> const resultsContainer = document.getElementById('omnibox-results');
+[js\app.js:3853] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox(); switchView('clientes'); seleccionarClienteFilaWeb(${c.id_cliente})" class="p-2 hover:bg-slate-100 dark:hover:bg-[#1a253a] rounded-lg pointer flex justify-between items-center">
+[js\app.js:3863] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox(); switchView('vehiculos'); seleccionarVehiculoFilaWeb(${v.id_vehiculo})" class="p-2 hover:bg-slate-100 dark:hover:bg-[#1a253a] rounded-lg pointer flex justify-between items-center">
+[js\app.js:3876] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox(); verDetalleOrdenDirectaWeb(${o.id_orden})" class="p-2 hover:bg-slate-100 dark:hover:bg-[#1a253a] rounded-lg pointer flex justify-between items-center">
+[js\app.js:3895] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[js\app.js:3934] Term: 'omnibox' (Found: 'Omnibox') -> toggleOmnibox();
+[js\app.js:3942] Term: 'omnibox' (Found: 'omnibox') -> const openModals = document.querySelectorAll('.omnibox-backdrop');
+[public\index.html:89] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox()" class="hidden md:flex items-center relative w-64 lg:w-80 bg-slate-50 dark:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] hover:border-blue-500 dark:hover:border-blue-400 rounded-lg px-3 py-1.5 pointer transition-colors group">
+[public\index.html:99] Term: 'omnibox' (Found: 'Omnibox') -> <button type="button" onclick="toggleOmnibox()" class="md:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#162032] border border-slate-200 dark:border-[#2a3b56] pointer transition-colors" title="Buscar (Ctrl+K)" aria-label="Buscar en el sistema">
+[public\index.html:1479] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-cliente" class="omnibox-backdrop hidden">
+[public\index.html:1524] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-vehiculo" class="omnibox-backdrop hidden">
+[public\index.html:1614] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-cobro" class="omnibox-backdrop hidden">
+[public\index.html:1671] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-cambiar-estado" class="omnibox-backdrop hidden">
+[public\index.html:1704] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-detalle-orden" class="omnibox-backdrop hidden">
+[public\index.html:1723] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-repuesto" class="omnibox-backdrop hidden">
+[public\index.html:1771] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-ajuste-stock" class="omnibox-backdrop hidden">
+[public\index.html:1796] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-servicio" class="omnibox-backdrop hidden">
+[public\index.html:1840] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-usuario" class="omnibox-backdrop hidden">
+[public\index.html:1889] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-pdf-viewer" class="omnibox-backdrop hidden">
+[public\index.html:1917] Term: 'omnibox' (Found: 'omnibox') -> <div id="modal-logout-confirm" class="omnibox-backdrop hidden">
+[public\index.html:1933] Term: 'omnibox' (Found: 'omnibox') -> <div id="login-modal" class="omnibox-backdrop hidden">
+[public\index.html:1954] Term: 'omnibox' (Found: 'omnibox') -> <div id="omnibox-backdrop" class="omnibox-backdrop hidden" onclick="if(event.target===this) toggleOmnibox()">
+[public\index.html:1954] Term: 'omnibox' (Found: 'omnibox') -> <div id="omnibox-backdrop" class="omnibox-backdrop hidden" onclick="if(event.target===this) toggleOmnibox()">
+[public\index.html:1954] Term: 'omnibox' (Found: 'Omnibox') -> <div id="omnibox-backdrop" class="omnibox-backdrop hidden" onclick="if(event.target===this) toggleOmnibox()">
+[public\index.html:1958] Term: 'omnibox' (Found: 'omnibox') -> <input type="text" id="omnibox-input" oninput="handleOmniboxSearch(this.value)" placeholder="Escriba placa, cliente, repuesto u orden..." class="bg-transparent border-0 text-slate-900 dark:text-white text-xs w-full focus:outline-none" aria-label="Búsqueda rápida en el sistema">
+[public\index.html:1958] Term: 'omnibox' (Found: 'Omnibox') -> <input type="text" id="omnibox-input" oninput="handleOmniboxSearch(this.value)" placeholder="Escriba placa, cliente, repuesto u orden..." class="bg-transparent border-0 text-slate-900 dark:text-white text-xs w-full focus:outline-none" aria-label="Búsqueda rápida en el sistema">
+[public\index.html:1961] Term: 'omnibox' (Found: 'omnibox') -> <div id="omnibox-results" class="flex flex-col gap-1 max-h-64 overflow-y-auto text-xs">
+[public\index.html:1968] Term: 'omnibox' (Found: 'omnibox') -> <div id="new-order-modal" class="omnibox-backdrop hidden">
+[public\styles.css:128] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div,
+[public\styles.css:373] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[public\styles.css:386] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[public\styles.css:393] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div {
+[public\styles.css:399] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.hidden {
+[public\styles.css:403] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.open {
+[public\styles.css:743] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop:not(#modal-pdf-viewer),
+[public\css\styles.css:128] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div,
+[public\css\styles.css:373] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[public\css\styles.css:386] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop {
+[public\css\styles.css:393] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop > div {
+[public\css\styles.css:399] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.hidden {
+[public\css\styles.css:403] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop.open {
+[public\css\styles.css:743] Term: 'omnibox' (Found: 'omnibox') -> .omnibox-backdrop:not(#modal-pdf-viewer),
+[public\js\app.js:314] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:338] Term: 'haptic' (Found: 'Haptic') -> function playHapticFeedback(type = 'click') {
+[public\js\app.js:347] Term: 'haptic' (Found: 'Haptic') -> if (state.audioEnabled) playHapticFeedback('toggle');
+[public\js\app.js:438] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('toggle');
+[public\js\app.js:500] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:585] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:935] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:1153] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:1549] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:1633] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:1752] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:1789] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:2031] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[public\js\app.js:2263] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:2293] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[public\js\app.js:2352] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:2468] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:2479] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:2631] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[public\js\app.js:2657] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:2684] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3140] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3243] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3296] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3365] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3727] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[public\js\app.js:3758] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3769] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3810] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('success');
+[public\js\app.js:3816] Term: 'omnibox' (Found: 'Omnibox') -> function toggleOmnibox() {
+[public\js\app.js:3817] Term: 'omnibox' (Found: 'omnibox') -> const modal = document.getElementById('omnibox-backdrop');
+[public\js\app.js:3818] Term: 'omnibox' (Found: 'omnibox') -> const input = document.getElementById('omnibox-input');
+[public\js\app.js:3822] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3828] Term: 'omnibox' (Found: 'Omnibox') -> handleOmniboxSearch('');
+[public\js\app.js:3834] Term: 'omnibox' (Found: 'Omnibox') -> function handleOmniboxSearch(query) {
+[public\js\app.js:3835] Term: 'omnibox' (Found: 'omnibox') -> const resultsContainer = document.getElementById('omnibox-results');
+[public\js\app.js:3853] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox(); switchView('clientes'); seleccionarClienteFilaWeb(${c.id_cliente})" class="p-2 hover:bg-slate-100 dark:hover:bg-[#1a253a] rounded-lg pointer flex justify-between items-center">
+[public\js\app.js:3863] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox(); switchView('vehiculos'); seleccionarVehiculoFilaWeb(${v.id_vehiculo})" class="p-2 hover:bg-slate-100 dark:hover:bg-[#1a253a] rounded-lg pointer flex justify-between items-center">
+[public\js\app.js:3876] Term: 'omnibox' (Found: 'Omnibox') -> <div onclick="toggleOmnibox(); verDetalleOrdenDirectaWeb(${o.id_orden})" class="p-2 hover:bg-slate-100 dark:hover:bg-[#1a253a] rounded-lg pointer flex justify-between items-center">
+[public\js\app.js:3895] Term: 'haptic' (Found: 'Haptic') -> playHapticFeedback('click');
+[public\js\app.js:3934] Term: 'omnibox' (Found: 'Omnibox') -> toggleOmnibox();
+[public\js\app.js:3942] Term: 'omnibox' (Found: 'omnibox') -> const openModals = document.querySelectorAll('.omnibox-backdrop');
+
+=== EMOJIS ===
+[js\app.js:2348] Emojis: '✓' -> showToast(`✓ Peritaje de ingreso y dictamen técnico de ${codigoOT} guardados exitosamente`, 'success');
+[js\app.js:2632] Emojis: '✓' -> showToast('✓ Enlace de rastreo copiado al portapapeles', 'success');
+[public\js\app.js:2348] Emojis: '✓' -> showToast(`✓ Peritaje de ingreso y dictamen técnico de ${codigoOT} guardados exitosamente`, 'success');
+[public\js\app.js:2632] Emojis: '✓' -> showToast('✓ Enlace de rastreo copiado al portapapeles', 'success');
