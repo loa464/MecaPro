@@ -8,13 +8,13 @@ Desarrollado para el **Curso Integrador I — Sistemas y Software (UTP)**.
 
 ## 👥 Equipo de Desarrollo y Colaboradores
 
-| Integrante | Rol en el Proyecto | Usuario GitHub | Correo Electrónico |
-|---|---|---|---|
-| **Jean Franck Loa Rojas** | **Tech Lead / Arquitecto de Software** | `loa464` | `loarojas3@gmail.com` |
-| **Alex Apolinario** | Frontend & Maquetación UI | `alexsalvatierraA` | `jloa.dev2@gmail.com` |
-| **Miguel Cóndor** | Estilos CSS, UX & Responsive | `migCondor` | `jloa.dev3@gmail.com` |
-| **José Carlos Mina** | Lógica Core, Cálculos & Flujos | `Xjosecarlmina` | `jloa.dev4@gmail.com` |
-| **Víctor Quiroz** | Datos, Catálogos, Caja & SQL | `victorquirozzz` | `jloa.dev5@gmail.com` |
+| Integrante | Rol en el Proyecto |
+|---|---|
+| **Loa Rojas, Jahn Pahol** | **Tech Lead / Arquitecto de Software** |
+| **Apolinarez Salvatierra, Alex Estefano** | Frontend & Maquetación UI |
+| **Condor Tomas, Miguel Eduardo** | Estilos CSS, UX & Responsive |
+| **Mina Huaman, Jose Carlos** | Lógica Core, Cálculos & Flujos |
+| **Noa Quiroz, Victor Manuel** | Datos, Catálogos, Caja & SQL |
 
 ---
 
